@@ -53,7 +53,7 @@
                 </p>
               </div>
               <div class="aluno-acoes">
-                <button type="button">Visualizar</button>
+                <a th:href="@{/alunos/{id}(id=${aluno.id})}"> Visualizar </a>
                 <a th:href="@{/alunos/{id}/editar(id=${aluno.id})}"> Editar </a>
               </div>
             </li>
