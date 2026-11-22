@@ -71,7 +71,7 @@
             <p>
               <strong>E-mail:</strong>
               <span
-                th:text="${aluno.contatoAluno.email != null ? aluno.contatoAluno.email : '-'}"
+                th:text="${aluno.contatoAluno != null && aluno.contatoAluno.email != null ? aluno.contatoAluno.email : '-'}"
               >
                 maria.silva@example.com</span
               >
