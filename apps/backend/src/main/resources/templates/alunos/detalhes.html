@@ -6,14 +6,24 @@
     <title>Detalhes do Aluno</title>
     <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
     <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/detalhes.css}" />
   </head>
   <body>
     <div class="app-layout">
       <div th:replace="~{fragments/sidebar :: sidebar}"></div>
       <main class="container">
-        <section class="page-header"></section>
+        <section class="page-header">
+          <div class="titulo-pagina">
+            <p>visualizar Aluno</p>
+            <h1>Detalhes do Aluno</h1>
+          </div>
+          <div class="aluno-acoes">
+            <a th:href="@{/alunos/{id}/editar(id=${aluno.id})}"> Editar </a>
+            <a th:href="@{/alunos/{id}/excluir(id=${aluno.id})}"> Excluir </a>
+          </div>
+        </section>
         <section class="detalhes-aluno">
-          <div class="aluno-header">
+          <div class="aluno-header card">
             <h2 th:text="${aluno.nome}">Maria</h2>
             <p>
               Matrícula:
@@ -24,12 +34,13 @@
             </p>
             <p>
               <strong>Curso:</strong>
-              <span th:text="${aluno.matricula != null ? aluno.matricula.curso : '-'}"
+              <span
+                th:text="${aluno.matricula != null ? aluno.matricula.curso : '-'}"
                 >Engenharia de Software</span
               >
             </p>
           </div>
-          <div class="dados-pessoais">
+          <div class="dados-pessoais card">
             <h3>Dados pessoais</h3>
             <p>
               <strong>CPF:</strong>
@@ -37,7 +48,9 @@
             </p>
             <p>
               <strong>Data de nascimento:</strong>
-              <span th:text="${aluno.dataNascimento != null ? #temporals.format(aluno.dataNascimento, 'dd/MM/yyyy') : '-'}">
+              <span
+                th:text="${aluno.dataNascimento != null ? #temporals.format(aluno.dataNascimento, 'dd/MM/yyyy') : '-'}"
+              ></span>
             </p>
             <p>
               <strong>Telefone:</strong>
@@ -56,12 +69,12 @@
               >
             </p>
           </div>
-          <div class="dados-academicos">
+          <div class="dados-academicos card">
             <h3>Dados acadêmicos</h3>
             <p>
               <strong>Matrícula:</strong>
               <span
-                th:text="${aluno.matricula != null ? aluno.matricula.numeroMatricula : '-'}"
+                th:text="${aluno.matricula.numeroMatricula != null ? aluno.matricula.numeroMatricula : '-'}"
                 >202610023</span
               >
             </p>
@@ -87,7 +100,7 @@
               >
             </p>
           </div>
-          <div class="responsavel">
+          <div class="responsavel card">
             <h3>Responsável</h3>
             <p>
               <strong>Nome:</strong>
@@ -106,7 +119,7 @@
             <p>
               <strong>E-mail:</strong>
               <span
-                th:text="${aluno.dadosResponsavel != null ? aluno.dadosResponsavel.contatoDoResponsavel.email : '-'}"
+                th:text="${aluno.dadosResponsavel != null && aluno.dadosResponsavel.contatoDoResponsavel != null ? aluno.dadosResponsavel.contatoDoResponsavel.email : '-'}"
               >
               </span>
             </p>

@@ -1,0 +1,53 @@
+/* Base reaproveitável entre telas (ex.: no global.css ou detalhes.css) */
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-left: solid 4px #1d4ed8;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.page-header p {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0 0 10px;
+}
+
+.page-header h1 {
+  font-size: 26px;
+  color: #1e293b;
+  margin: 0 0 22px;
+  padding-left: 5px;
+}
+
+.aluno-acoes button,
+.aluno-acoes a {
+  display: inline-block;
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.aluno-acoes button {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.aluno-acoes a {
+  background: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
