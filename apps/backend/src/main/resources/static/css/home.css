@@ -1,19 +1,17 @@
-
 .home {
   padding: 20px;
-  gap: 20px;
+  gap: 24px;
 }
 
-
 .home-header {
-  margin-bottom: 5px;
+  margin-bottom: 0;
 }
 
 .home-header h1 {
   font-size: 26px;
-  color: #1e293b;
-  margin: 0 0 12px;
-  padding-left: 5px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 6px;
 }
 
 .home-header p {
@@ -22,15 +20,15 @@
   margin: 0;
 }
 
-
 .home-section {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 14px;
 }
 
 .home-section h2 {
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 700;
   color: #1e293b;
   margin: 0;
 }
@@ -39,20 +37,30 @@
 .indicadores-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 15px;
+  gap: 16px;
 }
 
 .indicador-card {
   background: #ffffff;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border-left: solid 4px #1d4ed8;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #2563eb;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
 
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  min-height: 165px;
+  gap: 14px;
+  min-height: 156px;
+  min-width: 0;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.indicador-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+  border-left-color: #2563eb;
 }
 
 .indicador-topo {
@@ -60,116 +68,132 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 10px;
-
   font-size: 14px;
-  color: #64748b;
+  font-weight: 600;
+  color: #475569;
+  line-height: 1.35;
 }
 
 .indicador-icone {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
-
   background: #eff6ff;
   color: #2563eb;
-  border-radius: 6px;
-  font-size: 19px;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  font-size: 18px;
 }
 
 .indicador-valor {
   font-size: 28px;
-  color: #1e293b;
-  line-height: 1.2;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.15;
 }
 
 .indicador-link {
   margin-top: auto;
   color: #2563eb;
   font-size: 13px;
+  font-weight: 600;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .indicador-link:hover {
+  color: #1d4ed8;
   text-decoration: underline;
 }
 
 .indicador-status {
   margin-top: auto;
   color: #94a3b8;
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 
 .acessos-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 15px;
+  gap: 16px;
 }
 
 .acesso-card {
   display: flex;
   align-items: center;
-  gap: 15px;
-
+  gap: 16px;
   background: #ffffff;
   padding: 20px;
-  border-radius: 10px;
-  border-left: solid 4px #1d4ed8;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #2563eb;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
   text-decoration: none;
   color: #334155;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 0;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 .acesso-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+  border-color: #cbd5e1;
+  border-left-color: #2563eb;
 }
 
 .acesso-icone {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-
   background: #eff6ff;
   color: #2563eb;
-  border-radius: 6px;
-  font-size: 24px;
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  font-size: 22px;
 }
 
 .acesso-conteudo {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
 }
 
 .acesso-conteudo strong {
-  color: #1e293b;
+  color: #0f172a;
   font-size: 16px;
+  font-weight: 700;
 }
 
 .acesso-conteudo small {
   color: #64748b;
   font-size: 13px;
-  line-height: 1.5;
+  line-height: 1.45;
+  overflow-wrap: break-word;
 }
 
 .acesso-seta {
   margin-left: auto;
   color: #2563eb;
   font-size: 20px;
+  font-weight: 600;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
+.acesso-card:hover .acesso-seta {
+  transform: translateX(3px);
+}
 
 @media (max-width: 1200px) {
   .indicadores-grid {
@@ -180,6 +204,11 @@
 @media (max-width: 768px) {
   .home {
     padding: 15px;
+    gap: 20px;
+  }
+
+  .home-header h1 {
+    font-size: 22px;
   }
 
   .indicadores-grid,
@@ -188,6 +217,6 @@
   }
 
   .indicador-card {
-    min-height: 145px;
+    min-height: 140px;
   }
 }
