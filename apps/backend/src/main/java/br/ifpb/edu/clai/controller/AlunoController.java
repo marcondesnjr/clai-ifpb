@@ -38,57 +38,65 @@ public class AlunoController {
 
     @GetMapping("/{id}/editar")
     public String exibirFormularioEdicao(
-        @PathVariable String id,
-        Model model) {
+            @PathVariable String id,
+            Model model) {
 
-    Aluno aluno = alunoService.buscarPorId(id)
-        .orElseThrow(() ->
-            new AlunoNaoEncontradoException(
-        "Aluno não encontrado para o ID: " + id)
-        );
+        Aluno aluno = alunoService.buscarPorId(id)
+                .orElseThrow(() -> new AlunoNaoEncontradoException(
+                        "Aluno não encontrado para o ID: " + id));
 
-    model.addAttribute("aluno", aluno);
+        model.addAttribute("aluno", aluno);
 
-    return "alunos/form";
-}
+        return "alunos/form";
+    }
 
     @PostMapping("/salvar")
     public String salvarAluno(
-        @Valid @ModelAttribute("aluno") Aluno aluno,
-        BindingResult resultado) {
+            @Valid @ModelAttribute("aluno") Aluno aluno,
+            BindingResult resultado) {
 
-    aluno.setId(null);
+        aluno.setId(null);
 
-    if (resultado.hasErrors()) {
-        return "alunos/form";
+        if (resultado.hasErrors()) {
+            return "alunos/form";
+        }
+
+        alunoService.salvar(aluno);
+        return "redirect:/alunos";
     }
-
-    alunoService.salvar(aluno);
-    return "redirect:/alunos";
-    }
-
-
 
     @PostMapping("/{id}/editar")
     public String atualizarAluno(
-        @PathVariable String id,
-        @Valid @ModelAttribute("aluno") Aluno aluno,
-        BindingResult resultado) {
+            @PathVariable String id,
+            @Valid @ModelAttribute("aluno") Aluno aluno,
+            BindingResult resultado) {
 
-    aluno.setId(id);
+        aluno.setId(id);
 
-    if (resultado.hasErrors()) {
-        return "alunos/form";
+        if (resultado.hasErrors()) {
+            return "alunos/form";
+        }
+
+        alunoService.atualizar(id, aluno);
+        return "redirect:/alunos";
     }
-
-    alunoService.atualizar(id, aluno);
-    return "redirect:/alunos";
-}
-
 
     @PostMapping("/{id}/excluir")
     public String excluirAluno(@PathVariable String id) {
         alunoService.remover(id);
         return "redirect:/alunos";
+    }
+
+    @GetMapping("/{id}")
+    public String exibirDetalhesAluno(
+            @PathVariable String id,
+            Model model) {
+
+        Aluno aluno = alunoService.buscarPorId(id)
+                .orElseThrow(() -> new AlunoNaoEncontradoException(
+                        "Aluno não encontrado para o ID: " + id));
+
+        model.addAttribute("aluno", aluno);
+        return "alunos/detalhes";
     }
 }
