@@ -71,7 +71,7 @@
             <p>
               <strong>E-mail:</strong>
               <span
-                th:text="${aluno.contatoAluno != null ? aluno.contatoAluno.email : '-'}"
+                th:text="${aluno.contatoAluno.email != null ? aluno.contatoAluno.email : '-'}"
               >
                 maria.silva@example.com</span
               >
@@ -120,7 +120,7 @@
             <p>
               <strong>Telefone:</strong>
               <span
-                th:text="${aluno.dadosResponsavel != null ? aluno.dadosResponsavel.contatoDoResponsavel.telefone : '-'}"
+                th:text="${aluno.dadosResponsavel != null && aluno.dadosResponsavel.contatoDoResponsavel != null ? aluno.dadosResponsavel.contatoDoResponsavel.telefone : '-'}"
                 >(11) 9876-5432</span
               >
             </p>
