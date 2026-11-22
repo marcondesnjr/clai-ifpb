@@ -18,8 +18,16 @@
             <h1>Detalhes do Aluno</h1>
           </div>
           <div class="aluno-acoes">
-            <a th:href="@{/alunos/{id}/editar(id=${aluno.id})}"> Editar </a>
-            <a th:href="@{/alunos/{id}/excluir(id=${aluno.id})}"> Excluir </a>
+            <a th:href="@{/alunos/{id}/editar(id=${aluno.id})}">Editar</a>
+            <form
+              th:action="@{/alunos/{id}/excluir(id=${aluno.id})}"
+              method="post"
+              onsubmit="
+                return confirm('Tem certeza que deseja excluir este aluno?');
+              "
+            >
+              <button type="submit">Excluir</button>
+            </form>
           </div>
         </section>
         <section class="detalhes-aluno">

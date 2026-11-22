@@ -22,7 +22,6 @@
   color: #1e293b;
   margin: 0;
 }
-
 .aluno-acoes {
   display: flex;
   align-items: center;
@@ -30,8 +29,13 @@
   gap: 10px;
 }
 
-.aluno-acoes button,
-.aluno-acoes a {
+.aluno-acoes form {
+  margin: 0;
+  display: inline-flex;
+}
+
+.aluno-acoes a,
+.aluno-acoes button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -57,13 +61,13 @@
 }
 
 .aluno-acoes button {
-  background: #f8fafc;
-  color: #334155;
-  border: 1px solid #cbd5e1;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
 }
 
 .aluno-acoes button:hover {
-  background: #e2e8f0;
+  background: #fee2e2;
   transform: translateY(-1px);
 }
 
@@ -153,6 +157,7 @@
   text-align: right;
   overflow-wrap: anywhere;
 }
+
 
 @media (max-width: 768px) {
   .detalhes-aluno {
