@@ -3,9 +3,14 @@ package br.ifpb.edu.clai.controller;
 import br.ifpb.edu.clai.dto.UsuarioCadastroForm;
 import br.ifpb.edu.clai.model.PerfilUsuario;
 import br.ifpb.edu.clai.service.UsuarioService;
+import br.ifpb.edu.clai.dto.UsuarioEdicaoForm;
+import br.ifpb.edu.clai.model.Usuario;
 
-import jakarta.validation.Valid;
+import jakarta.validation.Valid; 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,5 +77,70 @@ public class UsuarioController {
         model.addAttribute("perfis", PerfilUsuario.values());
 
         return "usuarios/form";
+    }
+    
+    @GetMapping("/{id}/editar")
+    public String exibirEdicao(
+            @PathVariable String id,
+            Model model) {
+
+        Usuario usuario = usuarioService.buscarPorId(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Usuário não encontrado."
+                ));
+
+        UsuarioEdicaoForm form = new UsuarioEdicaoForm();
+
+        form.setNome(usuario.getNome());
+        form.setLogin(usuario.getLogin());
+        form.setPerfil(usuario.getPerfil());
+
+        model.addAttribute("form", form);
+        model.addAttribute("usuarioId", id);
+        model.addAttribute("perfis", PerfilUsuario.values());
+
+        return "usuarios/editar";
+    }
+
+    @PostMapping("/{id}/editar")
+    public String atualizarUsuario(
+            @PathVariable String id,
+            @Valid @ModelAttribute("form") UsuarioEdicaoForm form,
+            BindingResult resultado,
+            Model model) {
+
+        if (!resultado.hasErrors()) {
+            try {
+                usuarioService.atualizar(
+                        id,
+                        form.getNome(),
+                        form.getLogin(),
+                        form.getPerfil()
+                );
+
+                return "redirect:/usuarios";
+
+            } catch (IllegalArgumentException e) {
+                resultado.reject("edicao.invalida", e.getMessage());
+            }
+        }
+
+        model.addAttribute("usuarioId", id);
+        model.addAttribute("perfis", PerfilUsuario.values());
+
+        return "usuarios/editar";
+    }
+
+    @PostMapping("/{id}/desativar")
+    public String desativarUsuario(@PathVariable String id) {
+        usuarioService.desativar(id);
+        return "redirect:/usuarios";
+    }
+
+    @PostMapping("/{id}/reativar")
+    public String reativarUsuario(@PathVariable String id) {
+        usuarioService.reativar(id);
+        return "redirect:/usuarios";
     }
 }
