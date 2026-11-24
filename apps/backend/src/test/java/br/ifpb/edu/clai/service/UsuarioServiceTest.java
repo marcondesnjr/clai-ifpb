@@ -184,4 +184,18 @@ public class UsuarioServiceTest {
 
         verify(repository, never()).findByLogin(anyString());
     }
+    @Test
+    void naoDeveCadastrarUsuarioComSenhaCurta() {
+
+        assertThrows(IllegalArgumentException.class, () ->
+            service.cadastrar(
+                "Ana",
+                "ana",
+                "1234567",
+                PerfilUsuario.EDICAO
+            )
+        );
+
+        verify(repository, never()).save(any());
+    }
 }

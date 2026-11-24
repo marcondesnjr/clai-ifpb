@@ -42,6 +42,10 @@ public class UsuarioService {
         if (senha == null || senha.isBlank()) {
             throw new IllegalArgumentException("A senha é obrigatória.");
         }
+        
+        if (senha.length() < 8) {
+             throw new IllegalArgumentException("A senha deve ter pelo menos 8 caracteres." );
+        }
 
         if (perfil == null) {
             throw new IllegalArgumentException("O perfil é obrigatório.");
