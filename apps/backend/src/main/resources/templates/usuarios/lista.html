@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Usuários — CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/usuarios.css}">
+</head>
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="container usuarios-pagina">
+
+        <header class="usuarios-cabecalho">
+            <div>
+                <h1>Gerenciamento de usuários</h1>
+                <p>Consulte as contas cadastradas no CLAI.</p>
+            </div>
+
+            <a th:href="@{/usuarios/novo}" class="botao-novo">
+                + Cadastrar usuário
+            </a>
+        </header>
+
+        <section class="usuarios-card">
+
+            <h2>Usuários cadastrados</h2>
+
+            <p th:if="${#lists.isEmpty(usuarios)}"
+               class="mensagem-vazia">
+                Nenhum usuário cadastrado.
+            </p>
+
+            <div class="tabela-container"
+                 th:unless="${#lists.isEmpty(usuarios)}">
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Login</th>
+                            <th>Perfil</th>
+                            <th>Situação</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="usuario : ${usuarios}">
+
+                            <td th:text="${usuario.nome}">
+                                Nome do usuário
+                            </td>
+
+                            <td th:text="${usuario.login}">
+                                login
+                            </td>
+
+                            <td th:text="${usuario.perfil}">
+                                EDICAO
+                            </td>
+
+                            <td>
+                                <span
+                                    class="situacao"
+                                    th:classappend="${usuario.ativo}
+                                        ? 'status-ativo'
+                                        : 'status-inativo'"
+                                    th:text="${usuario.ativo}
+                                        ? 'Ativo'
+                                        : 'Inativo'">
+                                    Ativo
+                                </span>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+</body>
+</html>
