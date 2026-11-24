@@ -34,4 +34,13 @@ public class GlobalExceptionHandler {
         return "erro/erro-negocio";
     }
 
+    @ExceptionHandler(PeiNaoEncontradoException.class)
+    public String tratarPeiNaoEncontrado(
+            PeiNaoEncontradoException exception,
+            Model model) {
+
+        model.addAttribute("mensagemErro", exception.getMessage());
+        return "erro/erro-negocio";
+    }
+
 }
