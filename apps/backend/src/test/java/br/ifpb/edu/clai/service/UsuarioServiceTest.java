@@ -12,7 +12,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import java.util.List;
+import java.util.Optional;
 
 public class UsuarioServiceTest {
 
@@ -108,5 +111,77 @@ public class UsuarioServiceTest {
                         null
                 )
         );
+    }
+
+    @Test
+    void deveListarTodosOsUsuarios() {
+        Usuario primeiro = new Usuario();
+        primeiro.setNome("Ana");
+
+        Usuario segundo = new Usuario();
+        segundo.setNome("Carlos");
+
+        when(repository.findAll())
+                .thenReturn(List.of(primeiro, segundo));
+
+        List<Usuario> usuarios = service.listarTodos();
+
+        assertEquals(2, usuarios.size());
+        assertEquals("Ana", usuarios.get(0).getNome());
+        assertEquals("Carlos", usuarios.get(1).getNome());
+
+        verify(repository).findAll();
+    }
+
+    @Test
+    void deveBuscarUsuarioPorId() {
+        Usuario usuario = new Usuario();
+        usuario.setId("123");
+        usuario.setNome("Ana");
+
+        when(repository.findById("123"))
+                .thenReturn(Optional.of(usuario));
+
+        Optional<Usuario> resultado = service.buscarPorId("123");
+
+        assertTrue(resultado.isPresent());
+        assertEquals("Ana", resultado.get().getNome());
+
+        verify(repository).findById("123");
+    }
+
+    @Test
+    void deveRetornarVazioParaIdInvalido() {
+        Optional<Usuario> resultado = service.buscarPorId(" ");
+
+        assertTrue(resultado.isEmpty());
+
+        verify(repository, never()).findById(anyString());
+    }
+
+    @Test
+    void deveBuscarUsuarioPorLoginNormalizado() {
+        Usuario usuario = new Usuario();
+        usuario.setLogin("ana");
+
+        when(repository.findByLogin("ana"))
+                .thenReturn(Optional.of(usuario));
+
+        Optional<Usuario> resultado =
+                service.buscarPorLogin(" ANA ");
+
+        assertTrue(resultado.isPresent());
+        assertEquals("ana", resultado.get().getLogin());
+
+        verify(repository).findByLogin("ana");
+    }
+
+    @Test
+    void deveRetornarVazioParaLoginInvalido() {
+        Optional<Usuario> resultado = service.buscarPorLogin("");
+
+        assertTrue(resultado.isEmpty());
+
+        verify(repository, never()).findByLogin(anyString());
     }
 }
