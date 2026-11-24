@@ -6,6 +6,8 @@ import br.ifpb.edu.clai.repository.UsuarioRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
 import java.util.Locale;
 
@@ -61,5 +63,28 @@ public class UsuarioService {
         usuario.setAtivo(true);
 
         return usuarioRepository.save(usuario);
+        }
+
+    public List<Usuario> listarTodos() {
+        return usuarioRepository.findAll();
+    }
+
+    public Optional<Usuario> buscarPorId(String id) {
+        if (id == null || id.isBlank()) {
+            return Optional.empty();
+        }
+
+        return usuarioRepository.findById(id);
+    }
+
+    public Optional<Usuario> buscarPorLogin(String login) {
+        if (login == null || login.isBlank()) {
+            return Optional.empty();
+        }
+
+        String loginNormalizado =
+                login.trim().toLowerCase(Locale.ROOT);
+
+        return usuarioRepository.findByLogin(loginNormalizado);
     }
 }
