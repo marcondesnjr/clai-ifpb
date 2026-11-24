@@ -6,6 +6,7 @@ import br.ifpb.edu.clai.repository.UsuarioRepository;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.dao.DuplicateKeyException;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class UsuarioService {
         if (senha == null || senha.isBlank()) {
             throw new IllegalArgumentException("A senha é obrigatória.");
         }
-        
+
         if (senha.length() < 8) {
              throw new IllegalArgumentException("A senha deve ter pelo menos 8 caracteres." );
         }
@@ -66,9 +67,13 @@ public class UsuarioService {
         usuario.setPerfil(perfil);
         usuario.setAtivo(true);
 
-        return usuarioRepository.save(usuario);
+        try {
+            return usuarioRepository.save(usuario);
+        } 
+        catch (DuplicateKeyException e) {
+            throw new IllegalArgumentException("Este login já está cadastrado.", e);
         }
-
+    }
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.dao.DuplicateKeyException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -197,5 +198,29 @@ public class UsuarioServiceTest {
         );
 
         verify(repository, never()).save(any());
+    }
+
+    @Test
+    void deveTratarLoginDuplicadoDetectadoPeloBanco() {
+
+        doThrow(new DuplicateKeyException(
+                "E11000 duplicate key error"
+        )).when(repository).save(any(Usuario.class));
+
+        IllegalArgumentException erro = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.cadastrar(
+                        "Ana",
+                        "ANA",
+                        "senhaSegura123",
+                        PerfilUsuario.EDICAO
+                )
+        );
+
+        assertEquals("Este login já está cadastrado.",
+                erro.getMessage()
+        );
+
+        verify(repository).save(any(Usuario.class));
     }
 }
