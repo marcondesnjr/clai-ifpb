@@ -276,4 +276,59 @@ public class UsuarioServiceTest {
 
         verify(repository, never()).save(any(Usuario.class));
     }
+    @Test
+    void deveDesativarUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setAtivo(true);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario resultado = service.desativar("u1");
+
+        assertFalse(resultado.isAtivo());
+        verify(repository).save(usuario);
+    }
+
+    @Test
+    void deveReativarUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setAtivo(false);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario resultado = service.reativar("u1");
+
+        assertTrue(resultado.isAtivo());
+        verify(repository).save(usuario);
+    }
+
+    @Test
+    void naoDeveSalvarQuandoUsuarioJaEstaInativo() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setAtivo(false);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario resultado = service.desativar("u1");
+
+        assertFalse(resultado.isAtivo());
+        verify(repository, never()).save(any(Usuario.class));
+    }
+
+    @Test
+    void naoDeveDesativarUsuarioInexistente() {
+        when(repository.findById("inexistente"))
+                .thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.desativar("inexistente"));
+
+        verify(repository, never()).save(any(Usuario.class));
+    }
 }

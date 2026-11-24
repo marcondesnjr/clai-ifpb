@@ -133,4 +133,32 @@ public class UsuarioService {
             throw new IllegalArgumentException("Este login já está cadastrado.", e);
         }
     }
+
+    public Usuario desativar(String id) {
+        return alterarStatus(id, false);
+    }
+
+    public Usuario reativar(String id) {
+        return alterarStatus(id, true);
+    }
+
+    private Usuario alterarStatus(String id, boolean ativo) {
+
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(
+                    "O identificador do usuário é obrigatório.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Usuário não encontrado."));
+
+        if (usuario.isAtivo() == ativo) {
+            return usuario;
+        }
+
+        usuario.setAtivo(ativo);
+
+        return usuarioRepository.save(usuario);
+    }
 }
