@@ -1,0 +1,65 @@
+package br.ifpb.edu.clai.service;
+
+import br.ifpb.edu.clai.model.PerfilUsuario;
+import br.ifpb.edu.clai.model.Usuario;
+import br.ifpb.edu.clai.repository.UsuarioRepository;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Locale;
+
+@Service
+public class UsuarioService {
+
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder) {
+
+        this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    public Usuario cadastrar(
+            String nome,
+            String login,
+            String senha,
+            PerfilUsuario perfil) {
+
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("O nome é obrigatório.");
+        }
+
+        if (login == null || login.isBlank()) {
+            throw new IllegalArgumentException("O login é obrigatório.");
+        }
+
+        if (senha == null || senha.isBlank()) {
+            throw new IllegalArgumentException("A senha é obrigatória.");
+        }
+
+        if (perfil == null) {
+            throw new IllegalArgumentException("O perfil é obrigatório.");
+        }
+
+        String loginNormalizado =
+                login.trim().toLowerCase(Locale.ROOT);
+
+        if (usuarioRepository.existsByLogin(loginNormalizado)) {
+            throw new IllegalArgumentException("Este login já está cadastrado.");
+        }
+
+        Usuario usuario = new Usuario();
+
+        usuario.setNome(nome.trim());
+        usuario.setLogin(loginNormalizado);
+        usuario.setSenhaHash(passwordEncoder.encode(senha));
+        usuario.setPerfil(perfil);
+        usuario.setAtivo(true);
+
+        return usuarioRepository.save(usuario);
+    }
+}
