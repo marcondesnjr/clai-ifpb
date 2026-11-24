@@ -104,4 +104,97 @@
     .usuarios-pagina {
         padding: 16px;
     }
+
+    .usuarios-formulario {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        max-width: 600px;
+    }
+
+    .campo-usuario {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .campo-usuario label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .campo-usuario input,
+    .campo-usuario select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        background: #ffffff;
+        color: #1e293b;
+        box-sizing: border-box;
+    }
+
+    .campo-usuario input:focus,
+    .campo-usuario select:focus {
+        outline: 2px solid #2563eb;
+        outline-offset: 1px;
+        border-color: #2563eb;
+    }
+
+    .campo-usuario small {
+        color: #dc2626;
+        font-size: 12px;
+    }
+
+    .mensagem-erro {
+        padding: 12px 16px;
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .mensagem-erro p {
+        margin: 0;
+    }
+
+    .acoes-formulario {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-top: 8px;
+    }
+
+    .acoes-formulario button {
+        border: none;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 14px;
+    }
+
+    .acoes-formulario a {
+        color: #64748b;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .acoes-formulario a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+        .acoes-formulario {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .acoes-formulario button,
+        .acoes-formulario a {
+            text-align: center;
+        }
+    }
 }
