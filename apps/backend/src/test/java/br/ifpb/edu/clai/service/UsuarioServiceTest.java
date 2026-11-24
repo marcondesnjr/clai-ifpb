@@ -331,4 +331,42 @@ public class UsuarioServiceTest {
 
         verify(repository, never()).save(any(Usuario.class));
     }
+
+    @Test
+    void deveAlterarSenhaComHash() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setLogin("ana");
+        usuario.setSenhaHash("hash-antigo");
+        usuario.setAtivo(false);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario atualizado = service.alterarSenha(
+                "u1", "novaSenha123"
+        );
+
+        assertNotEquals(
+                "novaSenha123", atualizado.getSenhaHash()
+        );
+
+        assertTrue(passwordEncoder.matches(
+                "novaSenha123", atualizado.getSenhaHash()
+        ));
+
+        assertEquals("ana", atualizado.getLogin());
+        assertFalse(atualizado.isAtivo());
+
+        verify(repository).save(usuario);
+    }
+
+    @Test
+    void naoDeveAceitarSenhaCurtaNaAlteracao() {
+        assertThrows(IllegalArgumentException.class, () ->
+                service.alterarSenha("u1", "1234567")
+        );
+
+        verify(repository, never()).save(any(Usuario.class));
+    }
 }

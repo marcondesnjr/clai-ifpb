@@ -161,4 +161,28 @@ public class UsuarioService {
 
         return usuarioRepository.save(usuario);
     }
+
+    public Usuario alterarSenha(String id, String novaSenha) {
+
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(
+                    "O identificador do usuário é obrigatório.");
+        }
+
+        if (novaSenha == null || novaSenha.isBlank()
+                || novaSenha.length() < 8) {
+            throw new IllegalArgumentException(
+                    "A nova senha deve ter pelo menos 8 caracteres.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Usuário não encontrado."));
+
+        usuario.setSenhaHash(
+                passwordEncoder.encode(novaSenha)
+        );
+
+        return usuarioRepository.save(usuario);
+    }
 }
