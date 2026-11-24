@@ -96,4 +96,41 @@ public class UsuarioService {
 
         return usuarioRepository.findByLogin(loginNormalizado);
     }
+
+    public Usuario atualizar(
+            String id,
+            String nome,
+            String login,
+            PerfilUsuario perfil) {
+
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("O identificador do usuário é obrigatório.");
+        }
+
+        if (nome == null || nome.isBlank()
+                || login == null || login.isBlank()
+                || perfil == null) {
+            throw new IllegalArgumentException("Nome, login e perfil são obrigatórios.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
+        String novoLogin = login.trim().toLowerCase(Locale.ROOT);
+
+        if (!novoLogin.equals(usuario.getLogin())
+                && usuarioRepository.existsByLogin(novoLogin)) {
+            throw new IllegalArgumentException("Este login já está cadastrado.");
+        }
+
+        usuario.setNome(nome.trim());
+        usuario.setLogin(novoLogin);
+        usuario.setPerfil(perfil);
+
+        try {
+            return usuarioRepository.save(usuario);
+        } catch (DuplicateKeyException e) {
+            throw new IllegalArgumentException("Este login já está cadastrado.", e);
+        }
+    }
 }

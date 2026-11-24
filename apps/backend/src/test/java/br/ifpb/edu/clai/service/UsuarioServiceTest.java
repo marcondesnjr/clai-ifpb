@@ -223,4 +223,57 @@ public class UsuarioServiceTest {
 
         verify(repository).save(any(Usuario.class));
     }
+
+    @Test
+    void deveAtualizarDadosDoUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setNome("Ana");
+        usuario.setLogin("ana");
+        usuario.setSenhaHash("hash-original");
+        usuario.setPerfil(PerfilUsuario.CONSULTA);
+        usuario.setAtivo(false);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario atualizado = service.atualizar(
+                "u1",
+                "Ana Silva",
+                "ANA.NOVA",
+                PerfilUsuario.EDICAO
+        );
+
+        assertEquals("Ana Silva", atualizado.getNome());
+        assertEquals("ana.nova", atualizado.getLogin());
+        assertEquals(PerfilUsuario.EDICAO, atualizado.getPerfil());
+        assertEquals("hash-original", atualizado.getSenhaHash());
+        assertFalse(atualizado.isAtivo());
+
+        verify(repository).save(usuario);
+    }
+
+    @Test
+    void naoDeveAtualizarParaLoginDuplicado() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setLogin("ana");
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        when(repository.existsByLogin("carlos"))
+                .thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                service.atualizar(
+                        "u1",
+                        "Ana Silva",
+                        "carlos",
+                        PerfilUsuario.EDICAO
+                )
+        );
+
+        verify(repository, never()).save(any(Usuario.class));
+    }
 }
