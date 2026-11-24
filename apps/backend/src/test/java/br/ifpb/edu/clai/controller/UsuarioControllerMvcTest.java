@@ -14,6 +14,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
@@ -62,5 +63,27 @@ class UsuarioControllerMvcTest {
                         containsString("EDICAO")))
                 .andExpect(content().string(
                         containsString("CONSULTA")));
+    }
+    
+    @Test
+    void deveRenderizarFormularioDeEdicao() throws Exception {
+
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setNome("Ana Silva");
+        usuario.setLogin("ana");
+        usuario.setPerfil(PerfilUsuario.EDICAO);
+        usuario.setAtivo(true);
+
+        when(usuarioService.buscarPorId("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/usuarios/u1/editar"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("usuarios/editar"))
+                .andExpect(content().string(
+                        containsString("Editar usuário")))
+                .andExpect(content().string(
+                        containsString("Ana Silva")));
     }
 }
