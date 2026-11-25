@@ -96,4 +96,93 @@ public class UsuarioService {
 
         return usuarioRepository.findByLogin(loginNormalizado);
     }
+
+    public Usuario atualizar(
+            String id,
+            String nome,
+            String login,
+            PerfilUsuario perfil) {
+
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("O identificador do usuário é obrigatório.");
+        }
+
+        if (nome == null || nome.isBlank()
+                || login == null || login.isBlank()
+                || perfil == null) {
+            throw new IllegalArgumentException("Nome, login e perfil são obrigatórios.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
+        String novoLogin = login.trim().toLowerCase(Locale.ROOT);
+
+        if (!novoLogin.equals(usuario.getLogin())
+                && usuarioRepository.existsByLogin(novoLogin)) {
+            throw new IllegalArgumentException("Este login já está cadastrado.");
+        }
+
+        usuario.setNome(nome.trim());
+        usuario.setLogin(novoLogin);
+        usuario.setPerfil(perfil);
+
+        try {
+            return usuarioRepository.save(usuario);
+        } catch (DuplicateKeyException e) {
+            throw new IllegalArgumentException("Este login já está cadastrado.", e);
+        }
+    }
+
+    public Usuario desativar(String id) {
+        return alterarStatus(id, false);
+    }
+
+    public Usuario reativar(String id) {
+        return alterarStatus(id, true);
+    }
+
+    private Usuario alterarStatus(String id, boolean ativo) {
+
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(
+                    "O identificador do usuário é obrigatório.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Usuário não encontrado."));
+
+        if (usuario.isAtivo() == ativo) {
+            return usuario;
+        }
+
+        usuario.setAtivo(ativo);
+
+        return usuarioRepository.save(usuario);
+    }
+
+    public Usuario alterarSenha(String id, String novaSenha) {
+
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException(
+                    "O identificador do usuário é obrigatório.");
+        }
+
+        if (novaSenha == null || novaSenha.isBlank()
+                || novaSenha.length() < 8) {
+            throw new IllegalArgumentException(
+                    "A nova senha deve ter pelo menos 8 caracteres.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Usuário não encontrado."));
+
+        usuario.setSenhaHash(
+                passwordEncoder.encode(novaSenha)
+        );
+
+        return usuarioRepository.save(usuario);
+    }
 }

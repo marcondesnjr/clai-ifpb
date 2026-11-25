@@ -197,4 +197,45 @@
             text-align: center;
         }
     }
+
+    .acoes-usuario {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .acoes-usuario form {
+        margin: 0;
+    }
+
+    .acoes-usuario a,
+    .acoes-usuario button {
+        display: inline-block;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: inherit;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .acao-editar {
+        background: #eff6ff;
+        color: #1d4ed8;
+        border: 1px solid #bfdbfe;
+    }
+
+    .acao-desativar {
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+    .acao-reativar {
+        background: #f0fdf4;
+        color: #15803d;
+        border: 1px solid #bbf7d0;
+    }
 }
