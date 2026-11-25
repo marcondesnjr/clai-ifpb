@@ -20,6 +20,9 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @WebMvcTest(UsuarioController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -113,4 +116,55 @@ class UsuarioControllerMvcTest {
                 .andExpect(content().string(
                         containsString("Redefinir senha")));
     }
+
+        @Test
+        void deveExibirMensagemQuandoNaoExistiremUsuarios()
+                throws Exception {
+
+        when(usuarioService.listarTodos())
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/usuarios"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("usuarios/lista"))
+                .andExpect(content().string(
+                        containsString("Nenhum usuário cadastrado.")));
+        }
+
+        @Test
+        void deveCadastrarUsuarioComDadosValidos()
+                throws Exception {
+
+        mockMvc.perform(post("/usuarios/salvar")
+                .param("nome", "Ana")
+                .param("login", "ana")
+                .param("senha", "senhaSegura123")
+                .param("perfil", "EDICAO"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/usuarios"));
+
+        verify(usuarioService).cadastrar(
+                "Ana",
+                "ana",
+                "senhaSegura123",
+                PerfilUsuario.EDICAO
+        );
+        }
+
+        @Test
+        void naoDeveCadastrarUsuarioComNomeVazio()
+                throws Exception {
+
+        mockMvc.perform(post("/usuarios/salvar")
+                .param("nome", "")
+                .param("login", "ana")
+                .param("senha", "senhaSegura123")
+                .param("perfil", "EDICAO"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("usuarios/form"))
+                .andExpect(model().attributeHasFieldErrors(
+                        "form", "nome"));
+
+        verifyNoInteractions(usuarioService);
+        }
 }
