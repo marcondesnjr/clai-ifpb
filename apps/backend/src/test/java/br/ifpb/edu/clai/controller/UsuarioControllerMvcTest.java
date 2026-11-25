@@ -36,19 +36,22 @@ class UsuarioControllerMvcTest {
     void deveRenderizarListagemDeUsuarios() throws Exception {
 
         Usuario usuario = new Usuario();
+        usuario.setId("u1");
         usuario.setNome("Ana");
         usuario.setLogin("ana");
         usuario.setPerfil(PerfilUsuario.EDICAO);
         usuario.setAtivo(true);
-
-        when(usuarioService.listarTodos())
+        
+            when(usuarioService.listarTodos())
                 .thenReturn(List.of(usuario));
 
         mockMvc.perform(get("/usuarios"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("usuarios/lista"))
-                .andExpect(content().string(containsString("Ana")))
-                .andExpect(content().string(containsString("Ativo")));
+        .andExpect(status().isOk())
+        .andExpect(view().name("usuarios/lista"))
+        .andExpect(content().string(containsString("Ana")))
+        .andExpect(content().string(containsString("Ativo")))
+        .andExpect(content().string(containsString("/usuarios/u1/editar")))
+        .andExpect(content().string(containsString("/usuarios/u1/desativar")));
     }
 
     @Test
