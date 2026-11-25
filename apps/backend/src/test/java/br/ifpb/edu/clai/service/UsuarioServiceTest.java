@@ -223,4 +223,150 @@ public class UsuarioServiceTest {
 
         verify(repository).save(any(Usuario.class));
     }
+
+    @Test
+    void deveAtualizarDadosDoUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setNome("Ana");
+        usuario.setLogin("ana");
+        usuario.setSenhaHash("hash-original");
+        usuario.setPerfil(PerfilUsuario.CONSULTA);
+        usuario.setAtivo(false);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario atualizado = service.atualizar(
+                "u1",
+                "Ana Silva",
+                "ANA.NOVA",
+                PerfilUsuario.EDICAO
+        );
+
+        assertEquals("Ana Silva", atualizado.getNome());
+        assertEquals("ana.nova", atualizado.getLogin());
+        assertEquals(PerfilUsuario.EDICAO, atualizado.getPerfil());
+        assertEquals("hash-original", atualizado.getSenhaHash());
+        assertFalse(atualizado.isAtivo());
+
+        verify(repository).save(usuario);
+    }
+
+    @Test
+    void naoDeveAtualizarParaLoginDuplicado() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setLogin("ana");
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        when(repository.existsByLogin("carlos"))
+                .thenReturn(true);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                service.atualizar(
+                        "u1",
+                        "Ana Silva",
+                        "carlos",
+                        PerfilUsuario.EDICAO
+                )
+        );
+
+        verify(repository, never()).save(any(Usuario.class));
+    }
+    @Test
+    void deveDesativarUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setAtivo(true);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario resultado = service.desativar("u1");
+
+        assertFalse(resultado.isAtivo());
+        verify(repository).save(usuario);
+    }
+
+    @Test
+    void deveReativarUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setAtivo(false);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario resultado = service.reativar("u1");
+
+        assertTrue(resultado.isAtivo());
+        verify(repository).save(usuario);
+    }
+
+    @Test
+    void naoDeveSalvarQuandoUsuarioJaEstaInativo() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setAtivo(false);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario resultado = service.desativar("u1");
+
+        assertFalse(resultado.isAtivo());
+        verify(repository, never()).save(any(Usuario.class));
+    }
+
+    @Test
+    void naoDeveDesativarUsuarioInexistente() {
+        when(repository.findById("inexistente"))
+                .thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class,
+                () -> service.desativar("inexistente"));
+
+        verify(repository, never()).save(any(Usuario.class));
+    }
+
+    @Test
+    void deveAlterarSenhaComHash() {
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setLogin("ana");
+        usuario.setSenhaHash("hash-antigo");
+        usuario.setAtivo(false);
+
+        when(repository.findById("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        Usuario atualizado = service.alterarSenha(
+                "u1", "novaSenha123"
+        );
+
+        assertNotEquals(
+                "novaSenha123", atualizado.getSenhaHash()
+        );
+
+        assertTrue(passwordEncoder.matches(
+                "novaSenha123", atualizado.getSenhaHash()
+        ));
+
+        assertEquals("ana", atualizado.getLogin());
+        assertFalse(atualizado.isAtivo());
+
+        verify(repository).save(usuario);
+    }
+
+    @Test
+    void naoDeveAceitarSenhaCurtaNaAlteracao() {
+        assertThrows(IllegalArgumentException.class, () ->
+                service.alterarSenha("u1", "1234567")
+        );
+
+        verify(repository, never()).save(any(Usuario.class));
+    }
 }

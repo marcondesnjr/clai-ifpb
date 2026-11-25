@@ -49,6 +49,7 @@
                             <th>Login</th>
                             <th>Perfil</th>
                             <th>Situação</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
 
@@ -80,13 +81,43 @@
                                 </span>
                             </td>
 
+                            <td>
+                                <div class="acoes-usuario">
+                                    <a class="acao-editar"
+                                    th:href="@{/usuarios/{id}/editar(id=${usuario.id})}">
+                                        Editar
+                                    </a>
+                                    
+                                    <a class="acao-editar"
+                                    th:href="@{/usuarios/{id}/senha(id=${usuario.id})}">
+                                    Redefinir senha
+                                    </a>
+
+                                    <form th:if="${usuario.ativo}"
+                                        th:action="@{/usuarios/{id}/desativar(id=${usuario.id})}"
+                                        method="post"
+                                        onsubmit="return confirm('Deseja desativar este usuário?');">
+
+                                        <button type="submit" class="acao-desativar">
+                                            Desativar
+                                        </button>
+
+                                    </form>
+
+                                    <form th:unless="${usuario.ativo}"
+                                        th:action="@{/usuarios/{id}/reativar(id=${usuario.id})}"
+                                        method="post">
+                                        <button type="submit" class="acao-reativar">
+                                            Reativar
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-
         </section>
-
     </main>
 </div>
 
