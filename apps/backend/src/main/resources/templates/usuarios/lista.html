@@ -87,6 +87,11 @@
                                     th:href="@{/usuarios/{id}/editar(id=${usuario.id})}">
                                         Editar
                                     </a>
+                                    
+                                    <a class="acao-editar"
+                                    th:href="@{/usuarios/{id}/senha(id=${usuario.id})}">
+                                    Redefinir senha
+                                    </a>
 
                                     <form th:if="${usuario.ativo}"
                                         th:action="@{/usuarios/{id}/desativar(id=${usuario.id})}"
