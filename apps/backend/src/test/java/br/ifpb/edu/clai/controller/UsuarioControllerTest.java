@@ -4,6 +4,7 @@ import br.ifpb.edu.clai.dto.UsuarioCadastroForm;
 import br.ifpb.edu.clai.model.PerfilUsuario;
 import br.ifpb.edu.clai.model.Usuario;
 import br.ifpb.edu.clai.service.UsuarioService;
+import br.ifpb.edu.clai.dto.UsuarioListagemDTO;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,10 +44,19 @@ public class UsuarioControllerTest {
         String pagina = controller.listarUsuarios(model);
 
         assertEquals("usuarios/lista", pagina);
-        assertEquals(
-                List.of(usuario),
-                model.asMap().get("usuarios")
+        
+        List<?> usuarios =
+                (List<?>) model.asMap().get("usuarios");
+
+        assertEquals(1, usuarios.size());
+
+        UsuarioListagemDTO dto = assertInstanceOf(
+                UsuarioListagemDTO.class,
+                usuarios.get(0)
         );
+
+        assertEquals("Ana", dto.nome());
+        assertEquals("ana", dto.login());
 
         verify(usuarioService).listarTodos();
     }

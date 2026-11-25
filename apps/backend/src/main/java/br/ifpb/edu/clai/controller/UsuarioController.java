@@ -6,6 +6,7 @@ import br.ifpb.edu.clai.dto.UsuarioSenhaForm;
 import br.ifpb.edu.clai.model.PerfilUsuario;
 import br.ifpb.edu.clai.model.Usuario;
 import br.ifpb.edu.clai.service.UsuarioService;
+import br.ifpb.edu.clai.dto.UsuarioListagemDTO;
 
 import jakarta.validation.Valid;
 
@@ -38,7 +39,15 @@ public class UsuarioController {
 
     @GetMapping
     public String listarUsuarios(Model model) {
-        model.addAttribute("usuarios", usuarioService.listarTodos());
+
+        model.addAttribute(
+                "usuarios",
+                usuarioService.listarTodos()
+                        .stream()
+                        .map(UsuarioListagemDTO::de)
+                        .toList()
+        );
+
         return "usuarios/lista";
     }
 
