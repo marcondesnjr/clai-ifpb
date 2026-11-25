@@ -1,24 +1,25 @@
 package br.ifpb.edu.clai.controller;
 
 import br.ifpb.edu.clai.dto.UsuarioCadastroForm;
-import br.ifpb.edu.clai.model.PerfilUsuario;
-import br.ifpb.edu.clai.service.UsuarioService;
 import br.ifpb.edu.clai.dto.UsuarioEdicaoForm;
+import br.ifpb.edu.clai.dto.UsuarioSenhaForm;
+import br.ifpb.edu.clai.model.PerfilUsuario;
 import br.ifpb.edu.clai.model.Usuario;
+import br.ifpb.edu.clai.service.UsuarioService;
 
-import jakarta.validation.Valid; 
+import jakarta.validation.Valid;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @RequestMapping("/usuarios")
@@ -75,10 +76,9 @@ public class UsuarioController {
         }
 
         model.addAttribute("perfis", PerfilUsuario.values());
-
         return "usuarios/form";
     }
-    
+
     @GetMapping("/{id}/editar")
     public String exibirEdicao(
             @PathVariable String id,
@@ -122,7 +122,10 @@ public class UsuarioController {
                 return "redirect:/usuarios";
 
             } catch (IllegalArgumentException e) {
-                resultado.reject("edicao.invalida", e.getMessage());
+                resultado.reject(
+                        "edicao.invalida",
+                        e.getMessage()
+                );
             }
         }
 
@@ -142,5 +145,51 @@ public class UsuarioController {
     public String reativarUsuario(@PathVariable String id) {
         usuarioService.reativar(id);
         return "redirect:/usuarios";
+    }
+
+    @GetMapping("/{id}/senha")
+    public String exibirRedefinicaoSenha(
+            @PathVariable String id,
+            Model model) {
+
+        if (usuarioService.buscarPorId(id).isEmpty()) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Usuário não encontrado."
+            );
+        }
+
+        model.addAttribute("usuarioId", id);
+        model.addAttribute("form", new UsuarioSenhaForm());
+
+        return "usuarios/senha";
+    }
+
+    @PostMapping("/{id}/senha")
+    public String redefinirSenha(
+            @PathVariable String id,
+            @Valid @ModelAttribute("form") UsuarioSenhaForm form,
+            BindingResult resultado,
+            Model model) {
+
+        if (!resultado.hasErrors()) {
+            try {
+                usuarioService.alterarSenha(
+                        id,
+                        form.getNovaSenha()
+                );
+
+                return "redirect:/usuarios";
+
+            } catch (IllegalArgumentException e) {
+                resultado.reject(
+                        "senha.invalida",
+                        e.getMessage()
+                );
+            }
+        }
+
+        model.addAttribute("usuarioId", id);
+        return "usuarios/senha";
     }
 }

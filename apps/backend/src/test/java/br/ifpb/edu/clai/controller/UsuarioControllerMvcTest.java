@@ -23,7 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UsuarioController.class)
 @AutoConfigureMockMvc(addFilters = false)
-@TestPropertySource(properties = "clai.usuarios.admin.enabled=true")
+@TestPropertySource(
+        properties = "clai.usuarios.admin.enabled=true"
+)
 class UsuarioControllerMvcTest {
 
     @Autowired
@@ -41,17 +43,21 @@ class UsuarioControllerMvcTest {
         usuario.setLogin("ana");
         usuario.setPerfil(PerfilUsuario.EDICAO);
         usuario.setAtivo(true);
-        
-            when(usuarioService.listarTodos())
+
+        when(usuarioService.listarTodos())
                 .thenReturn(List.of(usuario));
 
         mockMvc.perform(get("/usuarios"))
-        .andExpect(status().isOk())
-        .andExpect(view().name("usuarios/lista"))
-        .andExpect(content().string(containsString("Ana")))
-        .andExpect(content().string(containsString("Ativo")))
-        .andExpect(content().string(containsString("/usuarios/u1/editar")))
-        .andExpect(content().string(containsString("/usuarios/u1/desativar")));
+                .andExpect(status().isOk())
+                .andExpect(view().name("usuarios/lista"))
+                .andExpect(content().string(
+                        containsString("Ana")))
+                .andExpect(content().string(
+                        containsString("Ativo")))
+                .andExpect(content().string(
+                        containsString("/usuarios/u1/editar")))
+                .andExpect(content().string(
+                        containsString("/usuarios/u1/desativar")));
     }
 
     @Test
@@ -67,7 +73,7 @@ class UsuarioControllerMvcTest {
                 .andExpect(content().string(
                         containsString("CONSULTA")));
     }
-    
+
     @Test
     void deveRenderizarFormularioDeEdicao() throws Exception {
 
@@ -88,5 +94,23 @@ class UsuarioControllerMvcTest {
                         containsString("Editar usuário")))
                 .andExpect(content().string(
                         containsString("Ana Silva")));
+    }
+
+    @Test
+    void deveRenderizarFormularioDeRedefinicaoSenha()
+            throws Exception {
+
+        Usuario usuario = new Usuario();
+        usuario.setId("u1");
+        usuario.setNome("Ana");
+
+        when(usuarioService.buscarPorId("u1"))
+                .thenReturn(Optional.of(usuario));
+
+        mockMvc.perform(get("/usuarios/u1/senha"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("usuarios/senha"))
+                .andExpect(content().string(
+                        containsString("Redefinir senha")));
     }
 }
