@@ -79,10 +79,12 @@ public class PeiServiceTest {
         Pei existente = new Pei();
         existente.setId("p1");
         existente.setAlunoId("a1");
+        existente.setNecessidades("Necessidades anteriores");
         when(repository.findById("p1")).thenReturn(Optional.of(existente));
 
         Pei dados = new Pei();
-        dados.setAlunoId("OUTRO");
+        dados.setId("outro-id");
+        dados.setAlunoId("OUTRO-ALUNO");
         dados.setNecessidades("Novas necessidades");
 
         Pei salvo = service.atualizar("p1", dados);
@@ -90,6 +92,76 @@ public class PeiServiceTest {
         assertEquals("p1", salvo.getId());
         assertEquals("a1", salvo.getAlunoId());
         assertEquals("Novas necessidades", salvo.getNecessidades());
+        verify(repository).save(existente);
+    }
+
+    @Test
+    void atualizarComDadosNulosDeveRejeitarESemSalvar() {
+        assertThrows(IllegalArgumentException.class,
+                () -> service.atualizar("p1", null));
+
+        verify(repository, never()).findById(anyString());
+        verify(repository, never()).save(any(Pei.class));
+    }
+
+    @Test
+    void atualizarSomenteUmCampoDevePreservarDemaisInformacoes() {
+        Pei existente = new Pei();
+        existente.setId("p1");
+        existente.setAlunoId("a1");
+        existente.setNecessidades("Necessidades já cadastradas");
+        existente.setConhecimentos("Conhecimentos já cadastrados");
+        existente.setCapacidades("Capacidades já cadastradas");
+
+        Pei.DadosAcademicos academicosExistentes = new Pei.DadosAcademicos();
+        academicosExistentes.setCurso("Informática");
+        academicosExistentes.setTurma("3A");
+        existente.setDadosAcademicos(academicosExistentes);
+
+        Pei.TrajetoriaEscolar trajetoriaExistente = new Pei.TrajetoriaEscolar();
+        trajetoriaExistente.setHistoricoEscolar("Histórico anterior");
+        existente.setTrajetoriaEscolar(trajetoriaExistente);
+
+        when(repository.findById("p1")).thenReturn(Optional.of(existente));
+
+        Pei dados = new Pei();
+        dados.setInteresses("Novo interesse");
+
+        Pei salvo = service.atualizar("p1", dados);
+
+        assertEquals("Novo interesse", salvo.getInteresses());
+        assertEquals("Necessidades já cadastradas", salvo.getNecessidades());
+        assertEquals("Conhecimentos já cadastrados", salvo.getConhecimentos());
+        assertEquals("Capacidades já cadastradas", salvo.getCapacidades());
+        assertEquals("Informática", salvo.getDadosAcademicos().getCurso());
+        assertEquals("3A", salvo.getDadosAcademicos().getTurma());
+        assertEquals("Histórico anterior", salvo.getTrajetoriaEscolar().getHistoricoEscolar());
+        verify(repository).save(existente);
+    }
+
+    @Test
+    void atualizarDadosAcademicosParciaisDevePreservarSubcamposNaoInformados() {
+        Pei existente = new Pei();
+        existente.setId("p1");
+        existente.setAlunoId("a1");
+
+        Pei.DadosAcademicos academicosExistentes = new Pei.DadosAcademicos();
+        academicosExistentes.setCurso("Informática");
+        academicosExistentes.setPeriodoLetivo("2026.1");
+        academicosExistentes.setTurma("3A");
+        existente.setDadosAcademicos(academicosExistentes);
+        when(repository.findById("p1")).thenReturn(Optional.of(existente));
+
+        Pei dados = new Pei();
+        Pei.DadosAcademicos academicosRecebidos = new Pei.DadosAcademicos();
+        academicosRecebidos.setTurma("3B");
+        dados.setDadosAcademicos(academicosRecebidos);
+
+        Pei salvo = service.atualizar("p1", dados);
+
+        assertEquals("Informática", salvo.getDadosAcademicos().getCurso());
+        assertEquals("2026.1", salvo.getDadosAcademicos().getPeriodoLetivo());
+        assertEquals("3B", salvo.getDadosAcademicos().getTurma());
     }
 
     @Test

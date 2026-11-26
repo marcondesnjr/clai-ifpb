@@ -51,12 +51,89 @@ public class PeiService {
     }
 
     public Pei atualizar(String id, Pei dados) {
+        if (dados == null) {
+            throw new IllegalArgumentException("Os dados do PEI para atualização são obrigatórios.");
+        }
+
         Pei existente = buscarPorId(id);
 
-        // o aluno vinculado nunca muda na edição
-        dados.setId(existente.getId());
-        dados.setAlunoId(existente.getAlunoId());
+        // Atualiza somente os campos enviados, preservando os que vierem como null.
+        atualizarDadosAcademicos(existente, dados);
+        atualizarTrajetoriaEscolar(existente, dados);
 
-        return peiRepository.save(dados);
+        if (dados.getNecessidades() != null) {
+            existente.setNecessidades(dados.getNecessidades());
+        }
+        if (dados.getConhecimentos() != null) {
+            existente.setConhecimentos(dados.getConhecimentos());
+        }
+        if (dados.getCapacidades() != null) {
+            existente.setCapacidades(dados.getCapacidades());
+        }
+        if (dados.getInteresses() != null) {
+            existente.setInteresses(dados.getInteresses());
+        }
+        if (dados.getDificuldades() != null) {
+            existente.setDificuldades(dados.getDificuldades());
+        }
+        if (dados.getAdaptacoesCurriculares() != null) {
+            // Uma lista vazia é considerada uma atualização explícita (limpa a lista).
+            existente.setAdaptacoesCurriculares(dados.getAdaptacoesCurriculares());
+        }
+
+        // O ID do PEI e o aluno vinculado não são alterados pela requisição.
+        return peiRepository.save(existente);
+    }
+
+    private void atualizarDadosAcademicos(Pei existente, Pei dados) {
+        Pei.DadosAcademicos dadosRecebidos = dados.getDadosAcademicos();
+        if (dadosRecebidos == null) {
+            return;
+        }
+
+        Pei.DadosAcademicos atuais = existente.getDadosAcademicos();
+        if (atuais == null) {
+            atuais = new Pei.DadosAcademicos();
+            existente.setDadosAcademicos(atuais);
+        }
+
+        if (dadosRecebidos.getCurso() != null) {
+            atuais.setCurso(dadosRecebidos.getCurso());
+        }
+        if (dadosRecebidos.getPeriodoLetivo() != null) {
+            atuais.setPeriodoLetivo(dadosRecebidos.getPeriodoLetivo());
+        }
+        if (dadosRecebidos.getTurma() != null) {
+            atuais.setTurma(dadosRecebidos.getTurma());
+        }
+        if (dadosRecebidos.getProfissionalResponsavel() != null) {
+            atuais.setProfissionalResponsavel(dadosRecebidos.getProfissionalResponsavel());
+        }
+        if (dadosRecebidos.getDataElaboracao() != null) {
+            atuais.setDataElaboracao(dadosRecebidos.getDataElaboracao());
+        }
+    }
+
+    private void atualizarTrajetoriaEscolar(Pei existente, Pei dados) {
+        Pei.TrajetoriaEscolar dadosRecebidos = dados.getTrajetoriaEscolar();
+        if (dadosRecebidos == null) {
+            return;
+        }
+
+        Pei.TrajetoriaEscolar atuais = existente.getTrajetoriaEscolar();
+        if (atuais == null) {
+            atuais = new Pei.TrajetoriaEscolar();
+            existente.setTrajetoriaEscolar(atuais);
+        }
+
+        if (dadosRecebidos.getEscolaridadeAnterior() != null) {
+            atuais.setEscolaridadeAnterior(dadosRecebidos.getEscolaridadeAnterior());
+        }
+        if (dadosRecebidos.getHistoricoEscolar() != null) {
+            atuais.setHistoricoEscolar(dadosRecebidos.getHistoricoEscolar());
+        }
+        if (dadosRecebidos.getExperienciasRelevantes() != null) {
+            atuais.setExperienciasRelevantes(dadosRecebidos.getExperienciasRelevantes());
+        }
     }
 }
