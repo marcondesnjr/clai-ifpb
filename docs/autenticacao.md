@@ -56,3 +56,39 @@ logout, sessão HTTP e proteção CSRF.
 
 Os testes usam bancos MongoDB específicos,
 separados dos dados normais da aplicação.
+
+## US28 — Controle de acesso por perfis
+
+O sistema utiliza dois perfis de acesso:
+EDICAO e CONSULTA.
+
+### Perfil EDICAO
+
+- Consultar registros.
+- Cadastrar alunos e estudos de caso.
+- Editar registros.
+- Excluir alunos nas operações disponíveis.
+
+### Perfil CONSULTA
+
+- Visualizar registros.
+- Pesquisar alunos e estudos de caso.
+- Não pode cadastrar, editar ou excluir registros.
+
+### Segurança
+
+As permissões são verificadas no backend
+pelo Spring Security.
+
+O Thymeleaf oculta os botões de alteração
+quando o usuário não possui autorização.
+
+As rotas /usuarios/** continuam bloqueadas
+até a definição de quem poderá administrar
+as contas.
+
+### Testes
+
+Foram implementados testes automatizados
+para validar as permissões dos dois perfis,
+incluindo operações permitidas e negadas.
