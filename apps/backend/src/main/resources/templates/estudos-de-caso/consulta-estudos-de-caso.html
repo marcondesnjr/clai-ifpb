@@ -44,9 +44,12 @@
         />
     </div>
 
-    <a th:href="@{/estudos-de-caso/novo}" class="btn-cadastrar">
-        + Cadastrar estudo de caso
-    </a>
+        <a th:if="${podeEditar}"
+        th:href="@{/estudos-de-caso/novo}"
+        class="btn-cadastrar">
+            + Cadastrar estudo de caso
+        </a>
+
 </div>
 
                 <div class="estudos-grid" th:if="${!#lists.isEmpty(estudos)}">

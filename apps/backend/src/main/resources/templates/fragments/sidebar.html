@@ -38,4 +38,21 @@
     </a>
   </nav>
   <script th:src="@{/js/sidebar.js}"></script>
+
+  <form class="sidebar-logout"
+        th:action="@{/logout}"
+        method="post">
+
+      <button type="submit"
+              class="sidebar-logout-botao"
+              aria-label="Sair da conta">
+
+          <span class="sidebar-logout-icone"
+                aria-hidden="true">↪</span>
+
+          <span class="menu-texto">Sair</span>
+
+      </button>
+  </form>
+
 </aside>

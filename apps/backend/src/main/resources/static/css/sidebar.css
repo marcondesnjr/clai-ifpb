@@ -77,7 +77,6 @@
   font-size: 20px;
 }
 
-/* Layout global com menu fixo */
 .sidebar {
     position: fixed !important;
     top: 0;
@@ -102,13 +101,11 @@
     overflow: visible;
 }
 
-/* Ajuste quando o menu estiver recolhido */
 body:has(.sidebar.recolhida) .app-layout > .container {
     margin-left: 60px;
     width: calc(100% - 60px);
 }
 
-/* A listagem de alunos acompanha a rolagem da página */
 .alunos-lista {
     flex: none !important;
     min-height: auto !important;
@@ -118,4 +115,48 @@ body:has(.sidebar.recolhida) .app-layout > .container {
 .listagem {
     flex: none !important;
     min-height: auto !important;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-logout {
+    margin-top: auto;
+    padding: 0 20px 20px;
+}
+
+.sidebar-logout-botao {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: white;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.sidebar-logout-botao:hover,
+.sidebar-logout-botao:focus-visible {
+    background: #28558a;
+}
+
+.sidebar-logout-icone {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.sidebar.recolhida .sidebar-logout {
+    padding: 0 8px 20px;
+}
+
+.sidebar.recolhida .sidebar-logout-botao {
+    justify-content: center;
 }

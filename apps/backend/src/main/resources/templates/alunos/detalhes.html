@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes do Aluno</title>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/detalhes.css}" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+      <main class="container">
+        <section class="page-header">
+          <div class="titulo-pagina">
+            <p>visualizar Aluno</p>
+            <h1>Detalhes do Aluno</h1>
+          </div>
+          <div class="aluno-acoes" th:if="${podeEditar}">
+            <a th:href="@{/alunos/{id}/editar(id=${aluno.id})}">Editar</a>
+            <form
+              th:action="@{/alunos/{id}/excluir(id=${aluno.id})}"
+              method="post"
+              onsubmit="
+                return confirm('Tem certeza que deseja excluir este aluno?');
+              "
+            >
+              <button type="submit">Excluir</button>
+            </form>
+          </div>
+        </section>
+        <section class="detalhes-aluno">
+          <div class="aluno-header card">
+            <h2 th:text="${aluno.nome}">Maria</h2>
+            <p>
+              Matrícula:
+              <span
+                th:text="${aluno.matricula != null ? aluno.matricula.numeroMatricula : '-'}"
+                >202610023</span
+              >
+            </p>
+            <p>
+              <strong>Curso:</strong>
+              <span
+                th:text="${aluno.matricula != null ? aluno.matricula.curso : '-'}"
+                >Engenharia de Software</span
+              >
+            </p>
+          </div>
+          <div class="dados-pessoais card">
+            <h3>Dados pessoais</h3>
+            <p>
+              <strong>CPF:</strong>
+              <span th:text="${aluno.cpf}">123.456.789-00</span>
+            </p>
+            <p>
+              <strong>Data de nascimento:</strong>
+              <span
+                th:text="${aluno.dataNascimento != null ? #temporals.format(aluno.dataNascimento, 'dd/MM/yyyy') : '-'}"
+              ></span>
+            </p>
+            <p>
+              <strong>Telefone:</strong>
+              <span
+                th:text="${aluno.contatoAluno != null ? aluno.contatoAluno.telefone : '-'}"
+              >
+                (11) 1234-5678</span
+              >
+            </p>
+            <p>
+              <strong>E-mail:</strong>
+              <span
+                th:text="${aluno.contatoAluno != null && aluno.contatoAluno.email != null ? aluno.contatoAluno.email : '-'}"
+              >
+                maria.silva@example.com</span
+              >
+            </p>
+          </div>
+          <div class="dados-academicos card">
+            <h3>Dados acadêmicos</h3>
+            <p>
+              <strong>Matrícula:</strong>
+              <span
+                th:text="${aluno.matricula.numeroMatricula != null ? aluno.matricula.numeroMatricula : '-'}"
+                >202610023</span
+              >
+            </p>
+            <p>
+              <strong>Período:</strong>
+              <span
+                th:text="${aluno.matricula.periodoLetivo != null ? aluno.matricula.periodoLetivo : '-'}"
+                >1º período</span
+              >
+            </p>
+            <p>
+              <strong>Curso:</strong>
+              <span
+                th:text="${aluno.matricula.curso != null ? aluno.matricula.curso : '-'}"
+                >Engenharia de Software</span
+              >
+            </p>
+            <p>
+              <strong>Ingresso:</strong>
+              <span
+                th:text="${aluno.matricula.periodoIngresso != null ? aluno.matricula.periodoIngresso : '-'}"
+                >01/01/2023</span
+              >
+            </p>
+          </div>
+          <div class="responsavel card">
+            <h3>Responsável</h3>
+            <p>
+              <strong>Nome:</strong>
+              <span
+                th:text="${aluno.dadosResponsavel != null ? aluno.dadosResponsavel.nome : '-'}"
+                >João Silva</span
+              >
+            </p>
+            <p>
+              <strong>Telefone:</strong>
+              <span
+                th:text="${aluno.dadosResponsavel != null && aluno.dadosResponsavel.contatoDoResponsavel != null ? aluno.dadosResponsavel.contatoDoResponsavel.telefone : '-'}"
+                >(11) 9876-5432</span
+              >
+            </p>
+            <p>
+              <strong>E-mail:</strong>
+              <span
+                th:text="${aluno.dadosResponsavel != null && aluno.dadosResponsavel.contatoDoResponsavel != null ? aluno.dadosResponsavel.contatoDoResponsavel.email : '-'}"
+              >
+              </span>
+            </p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
