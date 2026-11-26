@@ -36,8 +36,8 @@
                 placeholder="Buscar aluno pelo nome ou matrícula"
               />
             </div>
-            <a th:href="@{/alunos/novo}" id="cadastrar-aluno-btn">
-              Cadastrar aluno
+            <a th:if="${podeEditar}"th:href="@{/alunos/novo}"id="cadastrar-aluno-btn">
+            Cadastrar aluno
             </a>
           </div>
           <ul class="alunos-lista">
@@ -54,7 +54,10 @@
               </div>
               <div class="aluno-acoes">
                 <a th:href="@{/alunos/{id}(id=${aluno.id})}"> Visualizar </a>
-                <a th:href="@{/alunos/{id}/editar(id=${aluno.id})}"> Editar </a>
+                <a th:if="${podeEditar}"
+                  th:href="@{/alunos/{id}/editar(id=${aluno.id})}">
+                    Editar
+                </a>
               </div>
             </li>
           </ul>

@@ -17,7 +17,7 @@
             <p>visualizar Aluno</p>
             <h1>Detalhes do Aluno</h1>
           </div>
-          <div class="aluno-acoes">
+          <div class="aluno-acoes" th:if="${podeEditar}">
             <a th:href="@{/alunos/{id}/editar(id=${aluno.id})}">Editar</a>
             <form
               th:action="@{/alunos/{id}/excluir(id=${aluno.id})}"
