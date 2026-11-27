@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Planos de Ação | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/estudos-de-caso.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <main class="container">
+
+            <section class="page-header">
+                <h1>Planos de Ação</h1>
+                <p>Consulte e acompanhe os Planos de Ação dos alunos.</p>
+            </section>
+
+            <section class="resumo">
+                <div>
+                    <p>Total de Planos de Ação cadastrados</p>
+                    <strong th:text="${#lists.size(planos)}">0</strong>
+                </div>
+            </section>
+
+            <section class="listagem">
+
+                <div class="listagem-toolbar">
+                    <div class="busca">
+                        <input type="text" id="busca"
+                               placeholder="Buscar por aluno ou conteúdo do plano"
+                               aria-label="Buscar Planos de Ação" />
+                    </div>
+
+                    <a th:if="${podeEditar}" th:href="@{/planos-acao/novo}" class="btn-cadastrar">+ Cadastrar Plano de Ação</a>
+                </div>
+
+                <div class="estudos-grid" th:if="${!#lists.isEmpty(planos)}">
+
+                    <article class="estudo-card" th:each="plano : ${planos}">
+
+                        <div class="estudo-card-header">
+                            <span class="estudo-identificador">Plano de Ação</span>
+                        </div>
+
+                        <div class="estudo-card-content">
+
+                            <div class="informacao">
+                                <span>Aluno vinculado</span>
+                                <strong th:text="${nomesAlunos[plano.alunoId] != null ? nomesAlunos[plano.alunoId] : 'Aluno não identificado'}">
+                                    Nome do aluno
+                                </strong>
+                            </div>
+
+                            <div class="informacao">
+                                <span>Necessidades específicas</span>
+                                <strong th:text="${plano.necessidadesEspecificas != null ? #strings.abbreviate(plano.necessidadesEspecificas, 120) : 'Não informado'}">
+                                    Resumo
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <div class="estudo-card-footer">
+                            <a th:href="@{/planos-acao/{id}(id=${plano.id})}" class="btn-visualizar">
+                                Visualizar Plano de Ação
+                            </a>
+                        </div>
+
+                    </article>
+
+                </div>
+
+                <div class="estado-vazio" th:if="${#lists.isEmpty(planos)}">
+                    <h2>Nenhum Plano de Ação cadastrado</h2>
+                    <p>Ainda não existem Planos de Ação registrados no sistema.</p>
+                </div>
+
+                <p id="sem-resultados" class="sem-resultados" hidden>
+                    Nenhum Plano de Ação corresponde à sua busca.
+                </p>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- reaproveita a busca da listagem de estudos de caso (#busca, .estudo-card, #sem-resultados) -->
+    <script th:src="@{/js/estudos-de-caso.js}"></script>
+
+</body>
+</html>

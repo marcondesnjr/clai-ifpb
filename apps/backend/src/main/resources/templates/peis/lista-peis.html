@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>PEIs | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/estudos-de-caso.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <main class="container">
+
+            <section class="page-header">
+                <h1>Planos Educacionais Individualizados</h1>
+                <p>Consulte e acompanhe os PEIs dos alunos.</p>
+            </section>
+
+            <section class="resumo">
+                <div>
+                    <p>Total de PEIs cadastrados</p>
+                    <strong th:text="${#lists.size(peis)}">0</strong>
+                </div>
+            </section>
+
+            <section class="listagem">
+
+                <div class="listagem-toolbar">
+                    <div class="busca">
+                        <input type="text" id="busca"
+                               placeholder="Buscar por aluno ou profissional responsável"
+                               aria-label="Buscar PEIs" />
+                    </div>
+
+                    <a th:if="${podeEditar}" th:href="@{/peis/novo}" class="btn-cadastrar">+ Cadastrar PEI</a>
+                </div>
+
+                <div class="estudos-grid" th:if="${!#lists.isEmpty(peis)}">
+
+                    <article class="estudo-card" th:each="pei : ${peis}">
+
+                        <div class="estudo-card-header">
+                            <span class="estudo-identificador">PEI</span>
+                        </div>
+
+                        <div class="estudo-card-content">
+
+                            <div class="informacao">
+                                <span>Aluno vinculado</span>
+                                <strong th:text="${nomesAlunos[pei.alunoId] != null ? nomesAlunos[pei.alunoId] : 'Aluno não identificado'}">
+                                    Nome do aluno
+                                </strong>
+                            </div>
+
+                            <div class="informacao">
+                                <span>Profissional responsável</span>
+                                <strong th:text="${pei.dadosAcademicos?.profissionalResponsavel ?: 'Não informado'}">
+                                    Profissional
+                                </strong>
+                            </div>
+
+                            <div class="informacao">
+                                <span>Data de elaboração</span>
+                                <strong th:text="${pei.dadosAcademicos?.dataElaboracao != null ? #temporals.format(pei.dadosAcademicos.dataElaboracao, 'dd/MM/yyyy') : 'Não informada'}">
+                                    01/01/2026
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <div class="estudo-card-footer">
+                            <a th:href="@{/peis/{id}(id=${pei.id})}" class="btn-visualizar">
+                                Visualizar PEI
+                            </a>
+                        </div>
+
+                    </article>
+
+                </div>
+
+                <div class="estado-vazio" th:if="${#lists.isEmpty(peis)}">
+                    <h2>Nenhum PEI cadastrado</h2>
+                    <p>Ainda não existem PEIs registrados no sistema.</p>
+                </div>
+
+                <p id="sem-resultados" class="sem-resultados" hidden>
+                    Nenhum PEI corresponde à sua busca.
+                </p>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- reaproveita a busca da listagem de estudos de caso (#busca, .estudo-card, #sem-resultados) -->
+    <script th:src="@{/js/estudos-de-caso.js}"></script>
+
+</body>
+</html>

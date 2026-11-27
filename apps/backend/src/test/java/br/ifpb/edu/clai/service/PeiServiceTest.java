@@ -60,6 +60,13 @@ public class PeiServiceTest {
     }
 
     @Test
+    void deveListarTodos() {
+        when(repository.findAll()).thenReturn(List.of(new Pei(), new Pei()));
+
+        assertEquals(2, service.listarTodos().size());
+    }
+
+    @Test
     void deveListarPorAluno() {
         when(repository.findByAlunoId("a1")).thenReturn(List.of(new Pei()));
 

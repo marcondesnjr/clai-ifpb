@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Detalhes do Relatório de Observação | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/estudos-de-caso.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="container">
+
+        <section class="page-header">
+            <h1>Relatório de Observação</h1>
+            <p>Visualização completa do relato registrado.</p>
+        </section>
+
+        <div class="detalhe-acoes">
+            <a th:href="@{/relatorios-observacao}" class="btn-voltar">Voltar para listagem</a>
+
+            <a th:if="${podeEditar}" th:href="@{/relatorios-observacao/{id}/editar(id=${relatorio.id})}" class="btn-cadastrar">
+                Editar relatório
+            </a>
+        </div>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Identificação</h2></div>
+
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo">
+                    <span>Aluno</span>
+                    <strong th:text="${aluno.nome}">Nome do aluno</strong>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Matrícula</span>
+                    <strong th:text="${aluno.matricula?.numeroMatricula ?: 'Não informada'}">000000</strong>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Assistente de aluno</span>
+                    <strong th:text="${relatorio.assistente ?: 'Não informado'}">Assistente</strong>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Data da observação</span>
+                    <strong th:text="${relatorio.dataObservacao != null ? #temporals.format(relatorio.dataObservacao, 'dd/MM/yyyy') : 'Não informada'}">01/01/2026</strong>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Contexto da observação</span>
+                    <strong th:text="${relatorio.contexto ?: 'Não informado'}">Contexto</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Relato</h2></div>
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <p th:text="${relatorio.relato ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Comportamentos observados</h2></div>
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <p th:text="${relatorio.comportamentosObservados ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Observações adicionais</h2></div>
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <p th:text="${relatorio.observacoesAdicionais ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

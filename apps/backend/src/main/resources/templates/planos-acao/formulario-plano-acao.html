@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${plano.id == null ? 'Cadastrar Plano de Ação | CLAI' : 'Editar Plano de Ação | CLAI'}">Plano de Ação | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/formulario_estudo_de_caso.css}">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="container">
+
+        <header class="page-header">
+            <div>
+                <h1 th:text="${plano.id == null ? 'Cadastrar Plano de Ação' : 'Editar Plano de Ação'}">Plano de Ação</h1>
+                <p>Plano de Ação associado ao acompanhamento do aluno.</p>
+            </div>
+
+            <a th:href="@{/planos-acao}" class="btn-voltar">Voltar</a>
+        </header>
+
+        <!-- o id "formulario-estudo" reaproveita o estilo do formulário de estudo de caso -->
+        <form id="formulario-estudo"
+              th:object="${plano}"
+              th:action="${plano.id == null}
+                  ? @{/planos-acao/salvar}
+                  : @{/planos-acao/{id}/editar(id=${plano.id})}"
+              method="post">
+
+            <section class="form-section" th:if="${#fields.hasErrors('*')}">
+                <p class="mensagem-erro" th:each="erro : ${#fields.errors('*')}" th:text="${erro}"></p>
+            </section>
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>1. Aluno</h2>
+                    <p>Aluno associado ao Plano de Ação.</p>
+                </div>
+
+                <div class="campo" th:if="${plano.id == null}">
+                    <label for="aluno-id">Aluno *</label>
+
+                    <select th:field="*{alunoId}" id="aluno-id">
+                        <option value="">Selecione o aluno</option>
+                        <option th:each="a : ${alunos}"
+                                th:value="${a.id}"
+                                th:text="${a.matricula != null ? a.nome + ' — ' + a.matricula.numeroMatricula : a.nome}">
+                            Nome — 000000
+                        </option>
+                    </select>
+                </div>
+
+                <div class="campo" th:if="${plano.id != null}">
+                    <label>Aluno vinculado</label>
+                    <input type="text" th:value="${aluno != null ? aluno.nome : ''}" readonly>
+                    <input type="hidden" th:field="*{alunoId}">
+                </div>
+
+            </section>
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>2. Diagnóstico do caso</h2>
+                </div>
+
+                <div class="campo">
+                    <label for="necessidades">Necessidades específicas *</label>
+                    <textarea id="necessidades" th:field="*{necessidadesEspecificas}" maxlength="5000"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label for="dificuldades">Dificuldades sentidas no percurso educacional *</label>
+                    <textarea id="dificuldades" th:field="*{dificuldadesPercurso}" maxlength="5000"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label for="demandas">Demandas do caso *</label>
+                    <textarea id="demandas" th:field="*{demandasDoCaso}" maxlength="5000"></textarea>
+                </div>
+
+            </section>
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>3. Intervenção</h2>
+                </div>
+
+                <div class="campo">
+                    <label for="propostas">Propostas iniciais de intervenção *</label>
+                    <textarea id="propostas" th:field="*{propostasIntervencao}" maxlength="5000"></textarea>
+                </div>
+
+            </section>
+
+            <div class="form-actions">
+                <a th:href="@{/planos-acao}" class="btn-cancelar">Cancelar</a>
+
+                <button type="submit" class="btn-salvar">Salvar Plano de Ação</button>
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+</body>
+</html>

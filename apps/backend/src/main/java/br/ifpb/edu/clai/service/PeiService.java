@@ -46,6 +46,10 @@ public class PeiService {
                         "PEI não encontrado para o ID: " + id));
     }
 
+    public List<Pei> listarTodos() {
+        return peiRepository.findAll();
+    }
+
     public List<Pei> listarPorAluno(String alunoId) {
         return peiRepository.findByAlunoId(alunoId);
     }
