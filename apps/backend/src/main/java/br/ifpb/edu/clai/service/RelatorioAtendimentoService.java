@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import br.ifpb.edu.clai.exception.AlunoNaoEncontradoException;
+import br.ifpb.edu.clai.exception.RelatorioAtendimentoNaoEncontradoException;
 import br.ifpb.edu.clai.model.RelatorioAtendimento;
 import br.ifpb.edu.clai.repository.RelatorioAtendimentoRepository;
 
@@ -54,6 +55,33 @@ public class RelatorioAtendimentoService {
         relatorio.setCodigoAtendimento(gerarCodigoAtendimento());
 
         return relatorioRepository.save(relatorio);
+    }
+
+
+    public RelatorioAtendimento buscarPorId(String id) {
+        return relatorioRepository.findById(id)
+                .orElseThrow(() -> new RelatorioAtendimentoNaoEncontradoException(
+                        "Relatório de atendimento não encontrado para o ID: " + id));
+    }
+
+    public RelatorioAtendimento atualizar(String id, RelatorioAtendimento dados) {
+        if (dados == null) {
+            throw new IllegalArgumentException(
+                    "Os dados do relatório são obrigatórios.");
+        }
+
+        RelatorioAtendimento existente = buscarPorId(id);
+
+        // Preserva a identidade e o vínculo original do relatório.
+        dados.setId(existente.getId());
+        dados.setAlunoId(existente.getAlunoId());
+        dados.setCodigoAtendimento(existente.getCodigoAtendimento());
+
+        return relatorioRepository.save(dados);
+    }
+
+    public List<RelatorioAtendimento> listarTodos() {
+        return relatorioRepository.findAll();
     }
 
     public List<RelatorioAtendimento> listarPorAluno(String alunoId) {

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Detalhes do Relatório | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/relatorios-atendimento.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+</head>
+
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="container">
+
+        <section class="page-header">
+            <h1>Detalhes do Relatório</h1>
+            <p>Consulte as informações completas do atendimento registrado.</p>
+        </section>
+
+        <section class="relatorio-detalhes">
+
+            <div class="relatorio-detalhes-cabecalho">
+                <div>
+                    <span>Código do atendimento</span>
+                    <strong th:text="${relatorio.codigoAtendimento}">ATD-2026-000001</strong>
+                </div>
+
+                <span class="relatorio-detalhes-titulo"
+                      th:text="${relatorio.titulo}">
+                    Título do relatório
+                </span>
+            </div>
+
+            <section class="relatorio-detalhes-secao">
+                <h2>Identificação</h2>
+
+                <div class="relatorio-detalhes-grade">
+                    <div>
+                        <span>Aluno vinculado</span>
+                        <strong th:text="${aluno.nome}">Nome do aluno</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="relatorio-detalhes-secao">
+                <h2>Dados do atendimento</h2>
+
+                <div class="relatorio-detalhes-grade">
+                    <div>
+                        <span>Data do atendimento</span>
+                        <strong th:text="${relatorio.dataAtendimento != null ? #temporals.format(relatorio.dataAtendimento, 'dd/MM/yyyy') : '-'}">27/11/2026</strong>
+                    </div>
+
+                    <div>
+                        <span>Profissional responsável</span>
+                        <strong th:text="${relatorio.profissionalResponsavel}">Profissional</strong>
+                    </div>
+
+                    <div>
+                        <span>Modalidade</span>
+                        <strong th:text="${relatorio.modalidade}">Modalidade</strong>
+                    </div>
+
+                    <div>
+                        <span>Tipo de atendimento</span>
+                        <strong th:text="${relatorio.tipoAtendimento}">Tipo</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="relatorio-detalhes-secao">
+                <h2>Descrição do atendimento</h2>
+
+                <div class="relatorio-detalhes-campo">
+                    <span>Objetivo</span>
+                    <p th:text="${#strings.isEmpty(relatorio.objetivo) ? 'Não informado' : relatorio.objetivo}">
+                        Objetivo do atendimento
+                    </p>
+                </div>
+
+                <div class="relatorio-detalhes-campo">
+                    <span>Atividades realizadas</span>
+                    <p th:text="${relatorio.atividadesRealizadas}">
+                        Atividades realizadas durante o atendimento
+                    </p>
+                </div>
+            </section>
+
+            <section class="relatorio-detalhes-secao">
+                <h2>Informações complementares</h2>
+
+                <div class="relatorio-detalhes-campo">
+                    <span>Observações</span>
+                    <p th:text="${#strings.isEmpty(relatorio.observacoes) ? 'Não informado' : relatorio.observacoes}">
+                        Observações
+                    </p>
+                </div>
+
+                <div class="relatorio-detalhes-campo">
+                    <span>Encaminhamentos</span>
+                    <p th:text="${#strings.isEmpty(relatorio.encaminhamentos) ? 'Não informado' : relatorio.encaminhamentos}">
+                        Encaminhamentos
+                    </p>
+                </div>
+            </section>
+
+            <section class="relatorio-detalhes-secao">
+                <h2>Acompanhamento</h2>
+
+                <div class="relatorio-detalhes-grade">
+                    <div>
+                        <span>Necessita de acompanhamento?</span>
+                        <strong th:text="${relatorio.necessitaAcompanhamento == null ? '-' : (relatorio.necessitaAcompanhamento ? 'Sim' : 'Não')}">
+                            Sim
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span>Data do próximo acompanhamento</span>
+                        <strong th:text="${relatorio.dataProximoAcompanhamento != null ? #temporals.format(relatorio.dataProximoAcompanhamento, 'dd/MM/yyyy') : 'Não definida'}">
+                            Não definida
+                        </strong>
+                    </div>
+                </div>
+            </section>
+
+            <div class="relatorio-detalhes-acoes">
+                <a th:href="@{/relatorios-atendimento/{id}/editar(id=${relatorio.id})}"
+                   class="relatorios-btn-cadastrar">
+                    Editar relatório
+                </a>
+
+                <a th:href="@{/relatorios-atendimento}"
+                   class="relatorio-btn-voltar">
+                    Voltar à listagem
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+</body>
+</html>

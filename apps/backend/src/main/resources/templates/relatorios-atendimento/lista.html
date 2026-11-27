@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Relatórios de Atendimento | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/relatorios-atendimento.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="container">
+
+        <section class="page-header">
+            <h1>Relatórios de Atendimento</h1>
+            <p>Consulte e acompanhe os registros de atendimento dos alunos.</p>
+        </section>
+
+        <section class="relatorios-resumo">
+            <div>
+                <p>Total de relatórios registrados</p>
+                <strong th:text="${#lists.size(relatorios)}">0</strong>
+            </div>
+        </section>
+
+        <section class="relatorios-listagem">
+
+            <div class="relatorios-toolbar">
+
+                <div class="relatorios-busca">
+                    <input
+                        type="text"
+                        id="busca-relatorios"
+                        placeholder="Buscar por código, aluno ou profissional"
+                        aria-label="Buscar relatórios de atendimento"
+                    />
+                </div>
+
+                <a
+                    th:href="@{/relatorios-atendimento/novo}"
+                    class="relatorios-btn-cadastrar"
+                >
+                    + Novo relatório
+                </a>
+
+            </div>
+
+            <div
+                class="relatorios-grid"
+                th:if="${!#lists.isEmpty(relatorios)}"
+            >
+
+                <article
+                    class="relatorio-card"
+                    th:each="relatorio : ${relatorios}"
+                >
+
+                    <div class="relatorio-card-header">
+                        <span
+                            class="relatorio-identificador"
+                            th:text="${relatorio.codigoAtendimento}"
+                        >
+                            ATD-2026-000001
+                        </span>
+                    </div>
+
+                    <div class="relatorio-card-content">
+
+                        <div class="relatorio-informacao">
+                            <span>Aluno vinculado</span>
+                            <strong
+                                th:text="${nomesAlunos[relatorio.alunoId] != null ? nomesAlunos[relatorio.alunoId] : 'Aluno não identificado'}"
+                            >
+                                Nome do aluno
+                            </strong>
+                        </div>
+
+                        <div class="relatorio-informacao">
+                            <span>Data do atendimento</span>
+                            <strong th:text="${relatorio.dataAtendimento != null ? #temporals.format(relatorio.dataAtendimento, 'dd/MM/yyyy') : '-'}">
+                                27/11/2026
+                            </strong>
+                        </div>
+
+                        <div class="relatorio-informacao">
+                            <span>Profissional responsável</span>
+                            <strong th:text="${relatorio.profissionalResponsavel}">
+                                Profissional
+                            </strong>
+                        </div>
+
+                        <div class="relatorio-informacao">
+                            <span>Modalidade e tipo</span>
+                            <strong>
+                                <span th:text="${relatorio.modalidade}">Modalidade</span>
+                                -
+                                <span th:text="${relatorio.tipoAtendimento}">Tipo</span>
+                            </strong>
+                        </div>
+
+                    </div>
+
+                    <div class="relatorio-card-footer">
+                        <a
+                            th:href="@{/relatorios-atendimento/{id}(id=${relatorio.id})}"
+                            class="relatorio-btn-visualizar"
+                        >
+                            Visualizar relatório
+                        </a>
+                    </div>
+
+                </article>
+
+            </div>
+
+            <div
+                class="relatorios-estado-vazio"
+                th:if="${#lists.isEmpty(relatorios)}"
+            >
+                <h2>Nenhum relatório cadastrado</h2>
+                <p>
+                    Ainda não existem relatórios de atendimento registrados no sistema.
+                </p>
+            </div>
+
+            <p
+                id="relatorios-sem-resultados"
+                class="relatorios-sem-resultados"
+                hidden
+            >
+                Nenhum relatório corresponde à sua busca.
+            </p>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/relatorios-atendimento.js}"></script>
+
+</body>
+</html>

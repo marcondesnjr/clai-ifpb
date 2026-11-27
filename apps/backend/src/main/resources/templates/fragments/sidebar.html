@@ -36,7 +36,18 @@
       />
       <span class="menu-texto">Estudos de caso</span>
     </a>
-  </nav>
+  
+        <a href="/relatorios-atendimento" th:href="@{/relatorios-atendimento}">
+            <img
+                src="../../static/icons/file-chart.svg"
+                th:src="@{/icons/file-chart.svg}"
+                alt="Relatórios de atendimento"
+                width="24"
+                height="24"
+            />
+            <span class="menu-texto">Relatórios de atendimento</span>
+        </a>
+</nav>
   <script th:src="@{/js/sidebar.js}"></script>
 
   <form class="sidebar-logout"
