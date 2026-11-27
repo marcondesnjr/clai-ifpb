@@ -2,14 +2,15 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "development" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "development" ]
   workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-26.04
+    timeout-minutes: 15
 
     services:
       mongodb:
@@ -36,8 +37,13 @@ jobs:
 
   deploy:
     needs: test
-#    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    environment: production
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
 
     steps:
     - name: Deploy via ssh
