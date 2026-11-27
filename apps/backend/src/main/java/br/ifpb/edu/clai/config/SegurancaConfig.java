@@ -42,31 +42,49 @@ public class SegurancaConfig {
                     "/alunos/novo",
                     "/alunos/{id}/editar",
                     "/estudos-de-caso/novo",
-                    "/estudos-de-caso/{id}/editar"
+                    "/estudos-de-caso/{id}/editar",
+                    "/peis/novo",
+                    "/peis/{id}/editar",
+                    "/planos-acao/novo",
+                    "/planos-acao/{id}/editar",
+                    "/relatorios-observacao/novo",
+                    "/relatorios-observacao/{id}/editar"
                 ).hasRole("EDICAO")
 
                 .requestMatchers(
                     HttpMethod.POST,
                     "/alunos/**",
-                    "/estudos-de-caso/**"
+                    "/estudos-de-caso/**",
+                    "/peis/**",
+                    "/planos-acao/**",
+                    "/relatorios-observacao/**"
                 ).hasRole("EDICAO")
 
                 .requestMatchers(
                     HttpMethod.PUT,
                     "/alunos/**",
-                    "/estudos-de-caso/**"
+                    "/estudos-de-caso/**",
+                    "/peis/**",
+                    "/planos-acao/**",
+                    "/relatorios-observacao/**"
                 ).hasRole("EDICAO")
 
                 .requestMatchers(
                     HttpMethod.PATCH,
                     "/alunos/**",
-                    "/estudos-de-caso/**"
+                    "/estudos-de-caso/**",
+                    "/peis/**",
+                    "/planos-acao/**",
+                    "/relatorios-observacao/**"
                 ).hasRole("EDICAO")
 
                 .requestMatchers(
                     HttpMethod.DELETE,
                     "/alunos/**",
-                    "/estudos-de-caso/**"
+                    "/estudos-de-caso/**",
+                    "/peis/**",
+                    "/planos-acao/**",
+                    "/relatorios-observacao/**"
                 ).hasRole("EDICAO")
 
                 .anyRequest().authenticated()

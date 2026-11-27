@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${pei.id == null ? 'Cadastrar PEI | CLAI' : 'Editar PEI | CLAI'}">PEI | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/formulario_estudo_de_caso.css}">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="container">
+
+        <header class="page-header">
+            <div>
+                <h1 th:text="${pei.id == null ? 'Cadastrar PEI' : 'Editar PEI'}">PEI</h1>
+                <p>Plano Educacional Individualizado do estudante.</p>
+            </div>
+
+            <a th:href="@{/peis}" class="btn-voltar">Voltar</a>
+        </header>
+
+        <!-- o id "formulario-estudo" reaproveita o estilo do formulário de estudo de caso -->
+        <form id="formulario-estudo"
+              th:object="${pei}"
+              th:action="${pei.id == null}
+                  ? @{/peis/salvar}
+                  : @{/peis/{id}/editar(id=${pei.id})}"
+              method="post">
+
+            <section class="form-section" th:if="${#fields.hasErrors('*')}">
+                <p class="mensagem-erro" th:each="erro : ${#fields.errors('*')}" th:text="${erro}"></p>
+            </section>
+
+            <!-- IDENTIFICAÇÃO -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>1. Identificação</h2>
+                    <p>Aluno vinculado e dados acadêmicos.</p>
+                </div>
+
+                <div class="campo" th:if="${pei.id == null}">
+                    <label for="aluno-id">Aluno</label>
+
+                    <select th:field="*{alunoId}" id="aluno-id">
+                        <option value="">Selecione o aluno</option>
+                        <option th:each="a : ${alunos}"
+                                th:value="${a.id}"
+                                th:text="${a.matricula != null ? a.nome + ' — ' + a.matricula.numeroMatricula : a.nome}">
+                            Nome — 000000
+                        </option>
+                    </select>
+                </div>
+
+                <div class="campo" th:if="${pei.id != null}">
+                    <label>Aluno vinculado</label>
+                    <input type="text" th:value="${aluno != null ? aluno.nome : ''}" readonly>
+                    <input type="hidden" th:field="*{alunoId}">
+                </div>
+
+                <div class="campo">
+                    <label for="curso">Curso</label>
+                    <input type="text" id="curso" th:field="*{dadosAcademicos.curso}" maxlength="255">
+                </div>
+
+                <div class="campo">
+                    <label for="periodo">Período letivo</label>
+                    <input type="text" id="periodo" th:field="*{dadosAcademicos.periodoLetivo}" maxlength="50">
+                </div>
+
+                <div class="campo">
+                    <label for="turma">Turma</label>
+                    <input type="text" id="turma" th:field="*{dadosAcademicos.turma}" maxlength="100">
+                </div>
+
+                <div class="campo">
+                    <label for="profissional">Profissional responsável *</label>
+                    <input type="text" id="profissional" th:field="*{dadosAcademicos.profissionalResponsavel}" maxlength="255">
+                </div>
+
+                <div class="campo">
+                    <label for="data-elaboracao">Data de elaboração *</label>
+                    <input type="date" id="data-elaboracao" th:field="*{dadosAcademicos.dataElaboracao}">
+                </div>
+
+            </section>
+
+            <!-- TRAJETÓRIA ESCOLAR -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>2. Trajetória escolar</h2>
+                </div>
+
+                <div class="campo">
+                    <label>Escolaridade anterior</label>
+                    <textarea th:field="*{trajetoriaEscolar.escolaridadeAnterior}" maxlength="5000"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label>Histórico escolar</label>
+                    <textarea th:field="*{trajetoriaEscolar.historicoEscolar}" maxlength="5000"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label>Experiências relevantes</label>
+                    <textarea th:field="*{trajetoriaEscolar.experienciasRelevantes}" maxlength="5000"></textarea>
+                </div>
+
+            </section>
+
+            <!-- PERFIL -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>3. Perfil do estudante</h2>
+                </div>
+
+                <div class="campo">
+                    <label>Necessidades</label>
+                    <textarea th:field="*{necessidades}" maxlength="5000"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label>Conhecimentos</label>
+                    <textarea th:field="*{conhecimentos}" maxlength="5000"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label>Capacidades</label>
+                    <textarea th:field="*{capacidades}" maxlength="5000"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label>Interesses</label>
+                    <textarea th:field="*{interesses}" maxlength="5000"></textarea>
+                </div>
+
+                <div class="campo">
+                    <label>Dificuldades</label>
+                    <textarea th:field="*{dificuldades}" maxlength="5000"></textarea>
+                </div>
+
+            </section>
+
+            <!-- ADAPTAÇÕES CURRICULARES -->
+
+            <section class="form-section">
+
+                <div class="section-header">
+                    <h2>4. Adaptações curriculares</h2>
+                    <p>Adicione quantas adaptações forem necessárias.</p>
+                </div>
+
+                <div id="lista-adaptacoes" class="lista-dinamica">
+
+                    <div class="barreira-item"
+                         th:each="adaptacao, stat : ${pei.adaptacoesCurriculares}">
+
+                        <h3>Adaptação curricular</h3>
+
+                        <div class="campo">
+                            <label>Componente curricular</label>
+                            <input type="text" data-campo="componenteCurricular" maxlength="255"
+                                   th:field="*{adaptacoesCurriculares[__${stat.index}__].componenteCurricular}">
+                        </div>
+
+                        <div class="campo">
+                            <label>Adaptação</label>
+                            <textarea data-campo="adaptacao" maxlength="5000"
+                                      th:field="*{adaptacoesCurriculares[__${stat.index}__].adaptacao}"></textarea>
+                        </div>
+
+                        <div class="campo">
+                            <label>Justificativa</label>
+                            <textarea data-campo="justificativa" maxlength="5000"
+                                      th:field="*{adaptacoesCurriculares[__${stat.index}__].justificativa}"></textarea>
+                        </div>
+
+                        <button type="button" class="btn-remover">Remover</button>
+                    </div>
+
+                </div>
+
+                <button type="button" id="adicionar-adaptacao" class="btn-adicionar">
+                    + Adicionar adaptação
+                </button>
+
+            </section>
+
+            <!-- AÇÕES -->
+
+            <div class="form-actions">
+                <a th:href="@{/peis}" class="btn-cancelar">Cancelar</a>
+
+                <button type="submit" class="btn-salvar">Salvar PEI</button>
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+<script th:src="@{/js/pei-form.js}"></script>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Detalhes do Plano de Ação | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/estudos-de-caso.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="container">
+
+        <section class="page-header">
+            <h1>Plano de Ação</h1>
+            <p>Painel com o Plano de Ação desenvolvido para o aluno.</p>
+        </section>
+
+        <div class="detalhe-acoes">
+            <a th:href="@{/planos-acao}" class="btn-voltar">Voltar para listagem</a>
+
+            <a th:if="${podeEditar}" th:href="@{/planos-acao/{id}/editar(id=${plano.id})}" class="btn-cadastrar">
+                Editar Plano de Ação
+            </a>
+        </div>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Aluno</h2></div>
+
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo">
+                    <span>Nome completo</span>
+                    <strong th:text="${aluno.nome}">Nome do aluno</strong>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Matrícula</span>
+                    <strong th:text="${aluno.matricula?.numeroMatricula ?: 'Não informada'}">000000</strong>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Curso</span>
+                    <strong th:text="${aluno.matricula?.curso ?: 'Não informado'}">Curso</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Necessidades específicas</h2></div>
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <p th:text="${plano.necessidadesEspecificas ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Dificuldades no percurso educacional</h2></div>
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <p th:text="${plano.dificuldadesPercurso ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Demandas do caso</h2></div>
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <p th:text="${plano.demandasDoCaso ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Propostas iniciais de intervenção</h2></div>
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <p th:text="${plano.propostasIntervencao ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

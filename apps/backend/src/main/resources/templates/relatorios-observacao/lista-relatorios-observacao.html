@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Relatórios de Observação | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/estudos-de-caso.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+</head>
+
+<body>
+
+    <div class="app-layout">
+
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <main class="container">
+
+            <section class="page-header">
+                <h1>Relatórios de Observação</h1>
+                <p>Consulte os relatos registrados pelos assistentes de aluno.</p>
+            </section>
+
+            <section class="resumo">
+                <div>
+                    <p>Total de relatórios cadastrados</p>
+                    <strong th:text="${#lists.size(relatorios)}">0</strong>
+                </div>
+            </section>
+
+            <section class="listagem">
+
+                <div class="listagem-toolbar">
+                    <div class="busca">
+                        <input type="text" id="busca"
+                               placeholder="Buscar por aluno ou assistente"
+                               aria-label="Buscar Relatórios de Observação" />
+                    </div>
+
+                    <a th:if="${podeEditar}" th:href="@{/relatorios-observacao/novo}" class="btn-cadastrar">+ Cadastrar Relatório</a>
+                </div>
+
+                <div class="estudos-grid" th:if="${!#lists.isEmpty(relatorios)}">
+
+                    <article class="estudo-card" th:each="relatorio : ${relatorios}">
+
+                        <div class="estudo-card-header">
+                            <span class="estudo-identificador">Observação</span>
+                        </div>
+
+                        <div class="estudo-card-content">
+
+                            <div class="informacao">
+                                <span>Aluno vinculado</span>
+                                <strong th:text="${nomesAlunos[relatorio.alunoId] != null ? nomesAlunos[relatorio.alunoId] : 'Aluno não identificado'}">
+                                    Nome do aluno
+                                </strong>
+                            </div>
+
+                            <div class="informacao">
+                                <span>Assistente de aluno</span>
+                                <strong th:text="${relatorio.assistente ?: 'Não informado'}">Assistente</strong>
+                            </div>
+
+                            <div class="informacao">
+                                <span>Data da observação</span>
+                                <strong th:text="${relatorio.dataObservacao != null ? #temporals.format(relatorio.dataObservacao, 'dd/MM/yyyy') : 'Não informada'}">
+                                    01/01/2026
+                                </strong>
+                            </div>
+
+                        </div>
+
+                        <div class="estudo-card-footer">
+                            <a th:href="@{/relatorios-observacao/{id}(id=${relatorio.id})}" class="btn-visualizar">
+                                Visualizar relatório
+                            </a>
+                        </div>
+
+                    </article>
+
+                </div>
+
+                <div class="estado-vazio" th:if="${#lists.isEmpty(relatorios)}">
+                    <h2>Nenhum relatório cadastrado</h2>
+                    <p>Ainda não existem Relatórios de Observação registrados no sistema.</p>
+                </div>
+
+                <p id="sem-resultados" class="sem-resultados" hidden>
+                    Nenhum relatório corresponde à sua busca.
+                </p>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- reaproveita a busca da listagem de estudos de caso (#busca, .estudo-card, #sem-resultados) -->
+    <script th:src="@{/js/estudos-de-caso.js}"></script>
+
+</body>
+</html>

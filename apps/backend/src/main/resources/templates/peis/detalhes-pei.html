@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Detalhes do PEI | CLAI</title>
+
+    <link rel="stylesheet" th:href="@{/css/estudos-de-caso.css}" />
+    <link rel="stylesheet" th:href="@{/css/global.css}" />
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+    <main class="container">
+
+        <section class="page-header">
+            <h1>Detalhes do PEI</h1>
+            <p>Visualização completa das informações registradas.</p>
+        </section>
+
+        <div class="detalhe-acoes">
+            <a th:href="@{/peis}" class="btn-voltar">Voltar para listagem</a>
+
+            <a th:if="${podeEditar}" th:href="@{/peis/{id}/editar(id=${pei.id})}" class="btn-cadastrar">
+                Editar PEI
+            </a>
+        </div>
+
+        <!-- IDENTIFICAÇÃO DO ALUNO -->
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Identificação do aluno</h2></div>
+
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo">
+                    <span>Nome completo</span>
+                    <strong th:text="${aluno.nome}">Nome do aluno</strong>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Matrícula</span>
+                    <strong th:text="${aluno.matricula?.numeroMatricula ?: 'Não informada'}">000000</strong>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Curso</span>
+                    <strong th:text="${aluno.matricula?.curso ?: 'Não informado'}">Curso</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- DADOS ACADÊMICOS -->
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Dados acadêmicos</h2></div>
+
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo">
+                    <span>Curso</span>
+                    <p th:text="${pei.dadosAcademicos?.curso ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Período letivo</span>
+                    <p th:text="${pei.dadosAcademicos?.periodoLetivo ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Turma</span>
+                    <p th:text="${pei.dadosAcademicos?.turma ?: 'Não informada'}"></p>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Profissional responsável</span>
+                    <p th:text="${pei.dadosAcademicos?.profissionalResponsavel ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo">
+                    <span>Data de elaboração</span>
+                    <p th:text="${pei.dadosAcademicos?.dataElaboracao != null ? #temporals.format(pei.dadosAcademicos.dataElaboracao, 'dd/MM/yyyy') : 'Não informada'}"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRAJETÓRIA ESCOLAR -->
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Trajetória escolar</h2></div>
+
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <span>Escolaridade anterior</span>
+                    <p th:text="${pei.trajetoriaEscolar?.escolaridadeAnterior ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo campo-completo">
+                    <span>Histórico escolar</span>
+                    <p th:text="${pei.trajetoriaEscolar?.historicoEscolar ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo campo-completo">
+                    <span>Experiências relevantes</span>
+                    <p th:text="${pei.trajetoriaEscolar?.experienciasRelevantes ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PERFIL DO ESTUDANTE -->
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Perfil do estudante</h2></div>
+
+            <div class="detalhe-conteudo">
+                <div class="detalhe-campo campo-completo">
+                    <span>Necessidades</span>
+                    <p th:text="${pei.necessidades ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo campo-completo">
+                    <span>Conhecimentos</span>
+                    <p th:text="${pei.conhecimentos ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo campo-completo">
+                    <span>Capacidades</span>
+                    <p th:text="${pei.capacidades ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo campo-completo">
+                    <span>Interesses</span>
+                    <p th:text="${pei.interesses ?: 'Não informado'}"></p>
+                </div>
+
+                <div class="detalhe-campo campo-completo">
+                    <span>Dificuldades</span>
+                    <p th:text="${pei.dificuldades ?: 'Não informado'}"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADAPTAÇÕES CURRICULARES -->
+
+        <section class="detalhe-secao">
+            <div class="detalhe-secao-header"><h2>Adaptações curriculares</h2></div>
+
+            <div class="detalhe-conteudo">
+
+                <div class="barreira-card"
+                     th:each="adaptacao : ${pei.adaptacoesCurriculares}">
+
+                    <div class="detalhe-campo campo-completo">
+                        <span>Componente curricular</span>
+                        <p th:text="${adaptacao.componenteCurricular ?: 'Não informado'}"></p>
+                    </div>
+
+                    <div class="detalhe-campo campo-completo">
+                        <span>Adaptação</span>
+                        <p th:text="${adaptacao.adaptacao ?: 'Não informada'}"></p>
+                    </div>
+
+                    <div class="detalhe-campo campo-completo">
+                        <span>Justificativa</span>
+                        <p th:text="${adaptacao.justificativa ?: 'Não informada'}"></p>
+                    </div>
+                </div>
+
+                <p class="valor-vazio"
+                   th:if="${pei.adaptacoesCurriculares == null or #lists.isEmpty(pei.adaptacoesCurriculares)}">
+                    Nenhuma adaptação curricular registrada.
+                </p>
+
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>
