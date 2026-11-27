@@ -17,6 +17,8 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
+    networks:
+      - clai-net
 
   mongodb:
     image: mongo:9.0.2
@@ -33,6 +35,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    networks:
+      - clai-net
+
+networks:
+  clai-net:
+    driver: bridge
 
 volumes:
   mongo_data:

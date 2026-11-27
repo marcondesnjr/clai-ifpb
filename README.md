@@ -1,4 +1,5 @@
 
+
 # CLAI — Sistema de Apoio ao Atendimento de Alunos
 
 Projeto interdisciplinar desenvolvido no IFPB, período 2026.2.
