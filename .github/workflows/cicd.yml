@@ -35,7 +35,26 @@ jobs:
     - name: Test with Maven
       run: mvn -B verify --file apps/backend/pom.xml
 
-  deploy:
+  deploy-dev:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/development'
+    runs-on: ubuntu-26.04
+    timeout-minutes: 10
+    environment: staging
+    concurrency:
+      group: deploy-dev
+      cancel-in-progress: false
+    steps:
+      - name: Deploy to dev
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: ./deploy.sh dev
+  
+  deploy-prod:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-26.04
@@ -46,13 +65,12 @@ jobs:
       cancel-in-progress: false
 
     steps:
-    - name: Deploy via ssh
+    - name: Deploy to Prod via ssh
       uses: appleboy/ssh-action@v1.2.0
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ secrets.SSH_PORT || 22 }}
-        script: |
-          ./deploy.sh
+        script: ./deploy.sh prod
  
