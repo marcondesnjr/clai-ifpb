@@ -34,6 +34,10 @@ services:
       timeout: 5s
       retries: 5
 
+networks:
+  clai-net:
+    driver: bridge
+
 volumes:
   mongo_data:
     name: projeto-clai_mongo_data
